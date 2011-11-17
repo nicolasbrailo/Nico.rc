@@ -124,6 +124,11 @@ inoremap do<SPACE>{<CR> do<SPACE>{<CR>}<SPACE>while();<ESC>O
 inoremap do{<CR> do<SPACE>{<CR>}<SPACE>while();<ESC>O
 inoremap {<CR> {<CR>}<ESC>O
 
+inoremap \" \"\"<LEFT><LEFT>
+inoremap " ""<LEFT>
+inoremap \' \'\'<LEFT><LEFT>
+inoremap ' ''<LEFT>
+
 
 " *********** Fuzzy Finder config *************
 " Remap Ctrl-T to open Fuzzy Finder

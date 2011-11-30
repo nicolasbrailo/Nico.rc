@@ -105,6 +105,9 @@ map <leader>c :bd<cr>
 " Use <leader>w for fast saving
 nmap <leader>w :w<cr>
 
+" Used to lock commits
+nmap <leader>l O# checkinlock<ESC>:w<CR>
+
 " Ctrl-t and ,t: Write tabnew (wait for filename and <cr>)
 map <c-t> :tabnew 
 map <leader>t :tabnew 
@@ -128,6 +131,7 @@ inoremap \" \"\"<LEFT><LEFT>
 inoremap " ""<LEFT>
 inoremap \' \'\'<LEFT><LEFT>
 inoremap ' ''<LEFT>
+inoremap < <><LEFT>
 
 
 " *********** Fuzzy Finder config *************
@@ -142,5 +146,7 @@ highlight PmenuSel guifg=#CCCCCC guibg=#000000 gui=bold ctermfg=1 ctermbg=0 cter
 " menu suck less (pink, black and white? Really?)
 
 " Because I still don't know how to use FF, let's map ,fs to search files too
-map <leader>fs :!find CLASSES -iname **<left> 
+"map <leader>fs :!find CLASSES -iname **<left> 
+map <leader>fs :Fsfind 
+map <leader>fg :Fsgrep 
 

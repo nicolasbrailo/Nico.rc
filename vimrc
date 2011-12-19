@@ -127,13 +127,6 @@ inoremap do<SPACE>{<CR> do<SPACE>{<CR>}<SPACE>while();<ESC>O
 inoremap do{<CR> do<SPACE>{<CR>}<SPACE>while();<ESC>O
 inoremap {<CR> {<CR>}<ESC>O
 
-inoremap \" \"\"<LEFT><LEFT>
-inoremap " ""<LEFT>
-inoremap \' \'\'<LEFT><LEFT>
-inoremap ' ''<LEFT>
-inoremap < <><LEFT>
-
-
 " *********** Fuzzy Finder config *************
 " Remap Ctrl-T to open Fuzzy Finder
 map <C-T> :FufFile<CR>
@@ -149,4 +142,7 @@ highlight PmenuSel guifg=#CCCCCC guibg=#000000 gui=bold ctermfg=1 ctermbg=0 cter
 "map <leader>fs :!find CLASSES -iname **<left> 
 map <leader>fs :Fsfind 
 map <leader>fg :Fsgrep 
+
+" Add a quick way to get a class outline, using Tagbar
+nmap <F8> :TagbarToggle<CR>
 

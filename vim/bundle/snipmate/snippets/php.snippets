@@ -5,7 +5,7 @@ snippet stacktrace
 
 snippet debug
 	echo "<hr><pre>";
-	print_r($${1:var});
+	Debug::dump_inline($${1:var});
 	echo "</pre>";
 
 snippet php

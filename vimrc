@@ -106,7 +106,7 @@ map <leader>c :bd<cr>
 nmap <leader>w :w<cr>
 
 " Used to lock commits
-nmap <leader>l O# checkinlock<ESC>:w<CR>
+nmap <leader>l O# checkinlock - HERE BE DRAGONS<ESC>:w<CR>
 
 " Ctrl-t and ,t: Write tabnew (wait for filename and <cr>)
 map <c-t> :tabnew 
@@ -143,6 +143,12 @@ highlight PmenuSel guifg=#CCCCCC guibg=#000000 gui=bold ctermfg=1 ctermbg=0 cter
 map <leader>fs :Fsfind 
 map <leader>fg :Fsgrep 
 
+" *********** Tagbar config *************
+" Don't waste screen with tips and blank lines
+let tagbar_compact=1
+" Don't sort alphabetically tagbar's list, show it in the defined order
+let tagbar_sort=0
+
 " Add a quick way to get a class outline, using Tagbar
-nmap <F8> :TagbarToggle<CR>
+nmap <F8> :TagbarToggle<CR><C-W><C-W>
 

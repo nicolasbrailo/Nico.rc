@@ -4,6 +4,7 @@
 colorscheme torte
 set guifont=Inconsolata\ Medium\ 12
 syntax on	    	 " Turn on syntax highlighting
+set synmaxcol=300    " Only do syntax highlighting for the first 300 cols 
 set number		 	 " Show line numbers
 "set cursorline	 " Show in which line the cursor is in
 set ttyfast		 	 " Should redraw screen more smoothly
@@ -111,6 +112,8 @@ nmap <leader>l O# checkinlock - HERE BE DRAGONS<ESC>:w<CR>
 " Ctrl-t and ,t: Write tabnew (wait for filename and <cr>)
 map <c-t> :tabnew 
 map <leader>t :tabnew 
+nmap <C-Left> :tabprev<CR>
+nmap <C-Right> :tabnex<CR>
 
 " Alt-R: Exec current file as script
 map <a-r> :!.%<cr>
@@ -151,4 +154,13 @@ let tagbar_sort=0
 
 " Add a quick way to get a class outline, using Tagbar
 nmap <F8> :TagbarToggle<CR><C-W><C-W>
+
+" Display svn annotations
+map <leader>cn :VCSAnnotate!<CR>
+
+" Ctags
+" Search ctags file instead of just tags
+set tags=./ctags;/
+" Open a tag definition in a new tab
+map <C-CR> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 

@@ -77,8 +77,7 @@ function get_files_for() {
 
     # Get a basedir to print absolute paths
     basedir=`dirname $cache_file_path`
-    grep -nri "$needle" $cache_file_path \
-        | awk -F':' '{print $2}' | awk "{print \"$basedir/\"\$1}"
+    grep -i "$needle" $cache_file_path | awk "{print \"$basedir/\"\$1}"
 }
 
 # Gets all the *unique* files which mach a string search. This is needed
@@ -89,14 +88,16 @@ function get_unique_files_for() {
 
 # Wrap grep: get a list of file matches from an index, then grep each file
 # again to get the real matches
-function wraped_grep() {
+function wrapped_grep() {
     cache_file_path=$1
     needle="$2"
     files=`get_unique_files_for $cache_file_path "$needle"`
 
     # If we found no files we want to just exit
     if [ ${#files} -gt 1 ]; then
-        grep -nri "$needle" $files
+        # Adding /dev/null makes grep always see two files, then
+        # it will always print the file name
+        grep -nri "$needle" $files /dev/null
     fi
 }
 
@@ -203,5 +204,5 @@ if [ "${#GREPCACHE_FILE}" -lt 2 ]; then
     exit
 fi
 
-wraped_grep $GREPCACHE_FILE "$@"
+wrapped_grep $GREPCACHE_FILE "$@"
 

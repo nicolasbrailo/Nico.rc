@@ -1,0 +1,25 @@
+[global_config]
+[keybindings]
+  cycle_prev = <Control>Left
+  go_next = <Control><Alt>w
+  split_horiz = <Control><Alt>h
+  go_prev = <Control><Alt>q
+  new_window = <Control>t
+  cycle_next = <Control>Right
+  split_vert = <Control><Alt>v
+  go_right = <Shift><Control>Right
+  go_left = <Shift><Control>Left
+  reset_clear = <Control>k
+[profiles]
+  [[default]]
+    use_system_font = False
+    font = Inconsolata Medium 12
+[layouts]
+  [[default]]
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+    [[[window0]]]
+      type = Window
+      parent = ""
+[plugins]

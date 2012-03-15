@@ -53,30 +53,30 @@ function rebuild_cache() {
 # Gets from an index file all the project files which mach a needle
 function get_files_for() {
     cache_file_path=$1
-    needle=$2
+    needle="$2"
 
     # Get a basedir to print absolute paths
     basedir=`dirname $cache_file_path`
-    grep -nri $needle $cache_file_path \
+    grep -nri "$needle" $cache_file_path \
         | awk -F':' '{print $2}' | awk "{print \"$basedir/\"\$1}"
 }
 
 # Gets all the *unique* files which mach a string search. This is needed
 # so we don't have to grep again more than once
 function get_unique_files_for() {
-    get_files_for $1 $2 | sort | uniq
+    get_files_for "$1" "$2" | sort | uniq
 }
 
 # Wrap grep: get a list of file matches from an index, then grep each file
 # again to get the real matches
 function wraped_grep() {
     cache_file_path=$1
-    needle=$2
-    files=`get_unique_files_for $cache_file_path $needle`
+    needle="$2"
+    files=`get_unique_files_for $cache_file_path "$needle"`
 
     # If we found no files we want to just exit
     if [ ${#files} -gt 1 ]; then
-        grep -nri $needle $files
+        grep -nri "$needle" $files
     fi
 }
 
@@ -123,7 +123,6 @@ function rebuild_config() {
 # User interface
 #####################################################
 
-
 INDEX_DIRS=""
 EXCLUDE_PATTERN=""
 
@@ -138,44 +137,51 @@ if [ "${#GREPCACHE_CONFIG_FILE}" -gt 2 ]; then
     source $GREPCACHE_CONFIG_FILE
 fi
 
-
+# We write everything to stderr so we can define an alias like 
+# fastgrep $@|grep $@
+# This keeps the highlighting as the user would expect
 while getopts "chr" opt; do
     case "$opt" in
-        h) echo -ne "$0 is a simple grep wrapper to speed up searches in a large"
-           echo -ne " set of files. If you find yourself running 'grep -r *' and"
-           echo -ne " then waiting more than 10 seconds, $0 will help you speed"
-           echo -ne " up your searches.\n\n"
-           echo "$0 [run options|search pattern]"
-           echo ""
-           echo "Run options:"
-           echo "  -h: This help"
-           echo "  -r: Rebuild cache"
-           echo "  -c: Configure and rebuild (eg set exclude patterns)"
-           echo ""
+        h) echo -ne "$0 is a simple grep wrapper to speed up searches in a large" >&2
+           echo -ne " set of files. If you find yourself running 'grep -r *' and" >&2
+           echo -ne " then waiting more than 10 seconds, $0 will help you speed" >&2
+           echo -ne " up your searches.\n\n" >&2
+           echo "$0 [run options|search pattern]" >&2
+           echo "" >&2
+           echo "Run options:" >&2
+           echo "  -h: This help" >&2
+           echo "  -r: Rebuild cache" >&2
+           echo "  -c: Configure cache (eg set exclude patterns)" >&2
+           echo "" >&2
+           echo "Tip: Adding this to .bashrc is very helpful:" >&2
+           echo "    function fastgrep(){ $0 \"\$@\" | grep \"\$@\"; }" >&2
+           echo "This way fastgrep will be available in any directory with colour highlighting" >&2
+           echo "" >&2
            exit ;;
-        c) echo "Reconfiguring cache options..."
-           echo -n "Type a space separated list of the directories to "
-           echo "index, then enter [$INDEX_DIRS]:"
-           echo -n " > "
+        c) echo "Reconfiguring cache options..." >&2
+           echo -n "Type a space separated list of the directories to " >&2
+           echo "index, then enter [$INDEX_DIRS]:" >&2
+           echo -n " > " >&2
            read new_dirs_to_index
-           echo "Type a grep style exclusion pattern, then enter [$EXCLUDE_PATTERN]:"
-           echo -n " > "
+           echo "Type a grep style exclusion pattern, then enter [$EXCLUDE_PATTERN]:" >&2
+           echo -n " > " >&2
            read new_exclude_pattern
            rebuild_config "$INDEX_DIRS" "$new_dirs_to_index" \
                           "$EXCLUDE_PATTERN" "$new_exclude_pattern" \
                           $GREPCACHE_CONFIG_BASE_FILE
+           echo "Wrote config file, you should now run $0 -r to rebuild the cache" >&2
            exit ;;
-        r) echo "Rebuilding cache...";
+        r) echo "Rebuilding cache..." >&2;
            rebuild_cache ./$GREPCACHE_BASE_FILE $INDEX_DIRS $EXCLUDE_PATTERN
            exit ;;
     esac
 done
 
 if [ "${#GREPCACHE_FILE}" -lt 2 ]; then
-    echo "Cache file $GREPCACHE_BASE_FILE not found."
-    echo "Run $0 -r in the root of the project."
+    echo "Cache file $GREPCACHE_BASE_FILE not found." >&2
+    echo "Run $0 -r in the root of the project." >&2
     exit
 fi
 
-wraped_grep $GREPCACHE_FILE $1
+wraped_grep $GREPCACHE_FILE "$@"
 

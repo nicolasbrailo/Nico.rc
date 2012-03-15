@@ -7,8 +7,12 @@
 # instead of greping through each file in the project; this way we save most
 # of the disk lookups + we can exclude greping through files which we already
 # know we won't care.
-# Some quick tests show that for ~10 secs greps we can go down to ~1 sec. For
-# bigger projects the speedup might be bigger.
+#
+# Running some tests on an average sized project yielded a speedup from
+# about 10 seconds to 1 second, whereas for a large project (and index file
+# of around 200 MB) the speedup was from 3 minutes to around 14 seconds.
+# Please note these are anecdotical times and not a benchmark, since the speed
+# up experienced, if any, depends on a lot of variables.
 # 
 # TODO: fastgrep will print absolute paths. This is nice when you whan to run
 # it from any directory in your project but it would be good to have a way to
@@ -26,8 +30,8 @@ BASE_IGNORE_REGEX='\.git|\.svn|\.jpg|\.png|\.pdf|\.doc|\.ttf|\.pyc'
 # Lists all the file in the project, filtering out the binaries and the
 # set of user defined uninteresting files
 function list_interesting_files() {
-    dirs_to_check=$1
-    exclude_pattern=$2
+    dirs_to_check="$1"
+    exclude_pattern="$2"
 
     if [ ${#dirs_to_check} -eq 0 ]; then
         dirs_to_check=`ls .`
@@ -52,12 +56,12 @@ function list_interesting_files() {
 # Builds a new cache file from all the files considered "interesting"
 # by the 'list_interesting_files' function
 function rebuild_cache() {
-    grepcache_file=$1
-    dirs_to_check=$2
-    exclude_pattern=$3
+    grepcache_file="$1"
+    dirs_to_check="$2"
+    exclude_pattern="$3"
 
     echo '' > $grepcache_file
-    for file in `list_interesting_files $dirs_to_check $exclude_pattern`; do
+    for file in `list_interesting_files "$dirs_to_check" "$exclude_pattern"`; do
         cat $file | awk "{print \"$file \"\$0}" >> $grepcache_file
     done
 }
@@ -170,7 +174,7 @@ while getopts "chr" opt; do
            echo "  -c: Configure cache (eg set exclude patterns)" >&2
            echo "" >&2
            echo "Tip: Adding this to .bashrc is very helpful:" >&2
-           echo "    function fastgrep(){ $0 \"\$@\" | grep \"\$@\"; }" >&2
+           echo "    function fastgrep(){ $0 \"\$@\" | grep -i \"\$@\"; }" >&2
            echo "This way fastgrep will be available in any directory with colour highlighting" >&2
            echo "" >&2
            exit ;;
@@ -188,7 +192,7 @@ while getopts "chr" opt; do
            echo "Wrote config file, you should now run $0 -r to rebuild the cache" >&2
            exit ;;
         r) echo "Rebuilding cache..." >&2;
-           rebuild_cache ./$GREPCACHE_BASE_FILE $INDEX_DIRS $EXCLUDE_PATTERN
+           rebuild_cache ./$GREPCACHE_BASE_FILE "$INDEX_DIRS" "$EXCLUDE_PATTERN"
            exit ;;
     esac
 done

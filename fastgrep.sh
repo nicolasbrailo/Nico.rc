@@ -1,5 +1,21 @@
 #!/bin/bash
 
+# About fastgrep: simple grep wrapper to speed up grep'ing through a large
+# set of file, for example a more or less big programming project. The idea
+# behind it is simple, just concat all the files in the project in a giant
+# blob (with a reference back to the original file), then grep that blob 
+# instead of greping through each file in the project; this way we save most
+# of the disk lookups + we can exclude greping through files which we already
+# know we won't care.
+# Some quick tests show that for ~10 secs greps we can go down to ~1 sec. For
+# bigger projects the speedup might be bigger.
+# 
+# TODO: fastgrep will print absolute paths. This is nice when you whan to run
+# it from any directory in your project but it would be good to have a way to
+# print rel paths instead.
+#
+# TODO: Cleanup the getopts part, it's very ugly
+
 #####################################################
 # Cache building functions
 #####################################################

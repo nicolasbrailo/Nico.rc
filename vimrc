@@ -160,7 +160,7 @@ map <leader>cn :VCSAnnotate!<CR>
 
 " Ctags
 " Search ctags file instead of just tags
-set tags=./ctags;/
+set tags=./tags;/
 " Open a tag definition in a new tab
 map <C-CR> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 

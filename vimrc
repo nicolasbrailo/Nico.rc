@@ -2,7 +2,7 @@
 
 " *********** Look and feel *************
 colorscheme torte
-set guifont=Inconsolata\ Medium\ 12
+set guifont=Inconsolata\ Medium\ 14
 syntax on	    	 " Turn on syntax highlighting
 set synmaxcol=300    " Only do syntax highlighting for the first 300 cols 
 set number		 	 " Show line numbers

@@ -13,7 +13,8 @@
 [profiles]
   [[default]]
     use_system_font = False
-    font = Inconsolata Medium 12
+    font = Inconsolata Medium 14
+    scrollback_infinite = True
 [layouts]
   [[default]]
     [[[child1]]]

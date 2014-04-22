@@ -32,15 +32,22 @@ BASE_IGNORE_REGEX='\.git|\.svn|\.jpg|\.png|\.pdf|\.doc|\.ttf|\.pyc'
 function list_interesting_files() {
     dirs_to_check="$1"
     exclude_pattern="$2"
+    include_pattern="$3"
 
     if [ ${#dirs_to_check} -eq 0 ]; then
         dirs_to_check=`ls .`
     fi
 
     if [ ${#exclude_pattern} -gt 1 ]; then
-        pattern="$BASE_IGNORE_REGEX|$exclude_pattern";
+        ex_pattern="$BASE_IGNORE_REGEX|$exclude_pattern";
     else
-        pattern="$BASE_IGNORE_REGEX";
+        ex_pattern="$BASE_IGNORE_REGEX";
+    fi
+
+    if [ ${#include_pattern} -gt 1 ]; then
+        in_pattern="$include_pattern";
+    else
+        in_pattern=".";
     fi
 
     for dir in $dirs_to_check; do
@@ -48,7 +55,7 @@ function list_interesting_files() {
         #       | grep out the file types we don't care about
         #       | get file info for each one
         #       | grep those that contain text
-        find $dir -type f | egrep -v "$pattern" \
+        find $dir -type f | egrep -v "$ex_pattern" | egrep "$in_pattern" \
                 | xargs file | grep 'text' | awk -F':' '{print $1}'
     done
 }
@@ -59,9 +66,10 @@ function rebuild_cache() {
     grepcache_file="$1"
     dirs_to_check="$2"
     exclude_pattern="$3"
+    include_pattern="$4"
 
     echo '' > $grepcache_file
-    for file in `list_interesting_files "$dirs_to_check" "$exclude_pattern"`; do
+    for file in `list_interesting_files "$dirs_to_check" "$exclude_pattern" "$include_pattern"`; do
         cat $file | awk "{print \"$file \"\$0}" >> $grepcache_file
     done
 }
@@ -126,7 +134,9 @@ function rebuild_config() {
     new_idx_dirs=$2
     old_excl_ptn=$3
     new_excl_ptn=$4
-    config_path=$5
+    old_incl_ptn=$5
+    new_incl_ptn=$6
+    config_path=$7
 
     if [ "${#new_idx_dirs}" -eq 0 ]; then
         new_idx_dirs=$old_idx_dirs
@@ -136,8 +146,13 @@ function rebuild_config() {
         new_excl_ptn=$old_excl_ptn
     fi
 
+    if [ "${#new_incl_ptn}" -eq 0 ]; then
+        new_incl_ptn=$old_incl_ptn
+    fi
+
     echo "INDEX_DIRS=\"$new_idx_dirs\"" > $config_path
     echo "EXCLUDE_PATTERN=\"$new_excl_ptn\"" >> $config_path
+    echo "INCLUDE_PATTERN=\"$new_incl_ptn\"" >> $config_path
 }
 
 #####################################################
@@ -146,6 +161,7 @@ function rebuild_config() {
 
 INDEX_DIRS=""
 EXCLUDE_PATTERN=""
+INCLUDE_PATTERN=""
 
 GREPCACHE_CONFIG_BASE_FILE=.grepcacheconfig
 GREPCACHE_CONFIG_FILE=`find_file_in_tree $GREPCACHE_CONFIG_BASE_FILE`
@@ -187,13 +203,17 @@ while getopts "chr" opt; do
            echo "Type a grep style exclusion pattern, then enter [$EXCLUDE_PATTERN]:" >&2
            echo -n " > " >&2
            read new_exclude_pattern
+           echo "Type a grep style inclusion pattern, then enter [$INCLUDE_PATTERN]:" >&2
+           echo -n " > " >&2
+           read new_include_pattern
            rebuild_config "$INDEX_DIRS" "$new_dirs_to_index" \
                           "$EXCLUDE_PATTERN" "$new_exclude_pattern" \
+                          "$INCLUDE_PATTERN" "$new_include_pattern" \
                           $GREPCACHE_CONFIG_BASE_FILE
            echo "Wrote config file, you should now run $0 -r to rebuild the cache" >&2
            exit ;;
         r) echo "Rebuilding cache..." >&2;
-           rebuild_cache ./$GREPCACHE_BASE_FILE "$INDEX_DIRS" "$EXCLUDE_PATTERN"
+           rebuild_cache ./$GREPCACHE_BASE_FILE "$INDEX_DIRS" "$EXCLUDE_PATTERN" "$INCLUDE_PATTERN"
            exit ;;
     esac
 done

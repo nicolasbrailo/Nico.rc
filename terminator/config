@@ -1,4 +1,5 @@
 [global_config]
+  enabled_plugins = LaunchpadCodeURLHandler, APTURLHandler, LaunchpadBugURLHandler
 [keybindings]
   cycle_prev = <Control>Left
   go_next = <Control><Alt>w
@@ -15,11 +16,13 @@
     use_system_font = False
     font = Inconsolata Medium 14
     scrollback_infinite = True
+    show_titlebar = False
 [layouts]
   [[default]]
     [[[child1]]]
       type = Terminal
       parent = window0
+      profile = default
     [[[window0]]]
       type = Window
       parent = ""

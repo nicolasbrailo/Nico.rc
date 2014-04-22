@@ -1,3 +1,5 @@
+call pathogen#infect()
+
 " Note: Check :help CMD for help on each command
 
 " *********** Look and feel *************
@@ -55,26 +57,23 @@ set hidden				" Allow movement to another buffer without saving the current one
 set nocompatible		" Drop vi compatibility
 set wildmenu			" Don't autocomplete on cmd, show alternatives
 set mouse=a 			" Always use the mouse
-set visualbell			" Stop ugly being in Vim, flash the screen instead
+set visualbell			" Stop ugly beeping in Vim, flash the screen instead
 set ruler				" Show current cursor position
 set relativenumber	    " Show numbering relative to cursor
 autocmd BufEnter * set relativenumber   " Don't know why it won't work for new bufs
 
 set so=10               " When moving, start scrolling the screen 10 lines before end
-" Paste from OS clipboard
-map <leader>p "+p
-" Copy to OS clipboard
-map <leader>c "+y
 
-" Turn backup off, since most stuff is in SVN anyway...
+" Turn backup off, since most stuff is in a repo anyway...
 set nobackup
 set nowb
 set noswapfile
 
 
 " *********** Plugins *************
-call pathogen#infect()
 
+" Switch between header and impl using f4
+map <F4>c :AT
 
 " Set the working directory to the directory of the current file.
 "autocmd BufEnter * lcd %:p:h
@@ -97,8 +96,13 @@ cwindow
 let mapleader = ","
 let g:mapleader = ","
 
-" Use ,o to open a path under the cursor
-map <leader>o <C-w>gf
+" " Paste from OS clipboard
+" map <leader>p "+p
+" " Copy to OS clipboard
+" map <leader>c "+y
+" 
+" " Use ,o to open a path under the cursor
+" map <leader>o <C-w>gf
 
 " Use ,c to delete a buffer and close its tab
 map <leader>c :bd<cr>

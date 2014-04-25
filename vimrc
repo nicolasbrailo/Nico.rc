@@ -99,7 +99,7 @@ let g:mapleader = ","
 " " Paste from OS clipboard
 " map <leader>p "+p
 " " Copy to OS clipboard
-" map <leader>c "+y
+ map <leader>x "+y
 " 
 " " Use ,o to open a path under the cursor
 " map <leader>o <C-w>gf

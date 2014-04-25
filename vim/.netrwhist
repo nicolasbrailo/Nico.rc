@@ -1,11 +1,2 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =9
-let g:netrw_dirhist_1='/home/nico/dev/src/hyves/bliep/src/bliep'
-let g:netrw_dirhist_2='/home/nico/dev/src/hyves/bliep/src/bliep/model'
-let g:netrw_dirhist_3='/home/nico/dev/src/hyves/bliep/cdr_analyzer/hive_manager'
-let g:netrw_dirhist_4='/home/nico/dev/src/bliep/cdr_analyzer/custom_hive_ops/datediff/build'
-let g:netrw_dirhist_5='/home/nico/dev/src/pypress/im/main'
-let g:netrw_dirhist_6='/home/nico/dev/src/bliep/cdr_analyzer/analyzers'
-let g:netrw_dirhist_7='/home/nico/dev/src/hyves/pc_trunk'
-let g:netrw_dirhist_8='/home/nico/dev/src/hyves'
-let g:netrw_dirhist_9='/home/nico/dev/src/bliep/cdr_analyzer/analyzers'
+let g:netrw_dirhist_cnt =0

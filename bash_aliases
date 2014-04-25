@@ -13,6 +13,7 @@ export UBUNTU_MENUPROXY=0
 
 # Access to my fastgrep script from everywhere without adding a new $PATH entry
 alias fastgrep='~/Nico.rc/fastgrep.sh'
+alias gf='~/Nico.rc/fastgrep.sh'
 
 # Create a folder-usage alias based on disk-usage
 alias fu='du -h --max-depth=1'

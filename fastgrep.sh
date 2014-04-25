@@ -105,7 +105,11 @@ function wrapped_grep() {
     if [ ${#files} -gt 1 ]; then
         # Adding /dev/null makes grep always see two files, then
         # it will always print the file name
-        grep -nri "$needle" $files /dev/null
+        # -T = use spaces
+        # -H = with filename
+        # -n = include line num
+        # -i = case insensitive
+        grep -THni "$needle" $files
     fi
 }
 

@@ -14,11 +14,6 @@
 # Please note these are anecdotical times and not a benchmark, since the speed
 # up experienced, if any, depends on a lot of variables.
 # 
-# TODO: fastgrep will print absolute paths. This is nice when you whan to run
-# it from any directory in your project but it would be good to have a way to
-# print rel paths instead.
-#
-# TODO: Cleanup the getopts part, it's very ugly
 
 #####################################################
 # Cache building functions
@@ -51,12 +46,21 @@ function list_interesting_files() {
     fi
 
     for dir in $dirs_to_check; do
-        # find all the files in the interesting dirs
+        # find all the files in the interesting dir
+        #       | include only the files we do care about
         #       | grep out the file types we don't care about
-        #       | get file info for each one
-        #       | grep those that contain text
-        find $dir -type f | egrep -v "$ex_pattern" | egrep "$in_pattern" \
-                | xargs file | grep 'text' | awk -F':' '{print $1}'
+        #       | get file info for each one (*)
+        #       | accept only those that have a content of type text
+        #       | print the file name
+        # (*) file's stderr is ignored because the list of files might be
+        # empty, which makes file complain with an ugly error that might
+        # puzzle users.
+        find $dir -type f \
+                | egrep "$in_pattern" \
+                | egrep -v "$ex_pattern" \
+                | xargs file 2>/dev/null \
+                | grep 'text' \
+                | awk -F':' '{print $1}'
     done
 }
 
@@ -103,14 +107,43 @@ function wrapped_grep() {
 
     # If we found no files we want to just exit
     if [ ${#files} -gt 1 ]; then
-        # Adding /dev/null makes grep always see two files, then
-        # it will always print the file name
-        # -T = use spaces
+        # To get the retval from grep we use the idiom 
+        #    output=`cmd` && echo $output
+        # That way if cmd fails, $? has its retval
+
         # -H = with filename
         # -n = include line num
         # -i = case insensitive
-        grep -THni "$needle" $files
+        # awk: make it vim friendly (explanation below)
+        # sed: replace a long path with PWD
+        matches=`grep -Hni "$needle" $files` && \
+            echo "$matches" \
+            | awk -F ':' '{print $1" +"$2"\t" substr($0, index($0, $3))}' \
+            | sed "s#$PWD#.#g"
+
+        # It's possible that we got from the index a file that doesn't exist
+        # anymore: this will happen if a file has been moved and the cache is
+        # stale. We should tell the user to refresh the cache.
+        if [ $? -ne 0 ]; then
+            echo "Looks like grep failed to run: you probably have a stale cache."
+            echo "Try refreshing your cache with '$0 -r' on your project's root."
+        fi
+
     fi
+
+    # awk format explained:
+    # Assuming the output of grep will be something like
+    #   /path/to/file:line_nr:line w/matched expression, possibly including :'s
+    # Then, for -F':' (ie separator = ':')
+    #   $1 = /path/to/file
+    #   $2 = line_nr
+    #   $3-NF = We don't know, since the matched line may include ':'s too
+    # Then, the format:
+    #   $1" +"$2"\t" substr($0, index($0, $3))}'
+    # Is the same as:
+    #   /path/to/file +line_nr substr($0, index($0, $3))
+    # substr($0, index($0, $3)) is the string from field $3 to NR. Check
+    # man awk for documentation on substr and index.
 }
 
 

@@ -8,17 +8,17 @@ set guifont=Inconsolata\ Medium\ 14
 syntax on	    	 " Turn on syntax highlighting
 set synmaxcol=300    " Only do syntax highlighting for the first 300 cols 
 set number		 	 " Show line numbers
-"set cursorline	 " Show in which line the cursor is in
+"set cursorline	     " Show in which line the cursor is in
 set ttyfast		 	 " Should redraw screen more smoothly
 "set laststatus=2	 " Always show a status bar (takes a line)
 set showmode		 " display the current mode in the status line
 set showcmd			 " Display partially-typed commands in the status line
-"set colorcolumn=80 " Show a red column for long lines
+"set colorcolumn=80  " Show a red column for long lines
 
 
 " *********** Text formatting *************
 set wildmode=list:longest,full 	" Use tab-completions
-set nowrap								" Default to non wrapping mode
+set nowrap						" Default to non wrapping mode
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
@@ -29,15 +29,15 @@ set smartindent
 
 
 " *********** Spell checking *************
-map <leader>sc :setlocal spell!<cr>
-" Next misspell
-map <leader>sn ]s
-" Previous misspell
-map <leader>sp [s
-" Add ti dictionary
-map <leader>sa zg
-" Correct misspell
-map <leader>s? z=
+" map <leader>sc :setlocal spell!<cr>
+" " Next misspell
+" map <leader>sn ]s
+" " Previous misspell
+" map <leader>sp [s
+" " Add ti dictionary
+" map <leader>sa zg
+" " Correct misspell
+" map <leader>s? z=
 
 filetype on
 filetype plugin indent on
@@ -120,19 +120,17 @@ nmap <C-Left> :tabprev<CR>
 nmap <C-Right> :tabnex<CR>
 
 " Alt-R: Exec current file as script
-map <a-r> :!.%<cr>
+noremap <a-r> :!.%<cr>
 " Ctrl-Alt-R
-map <F5> :tabnew<cr>:make<cr>
+noremap <F5> :tabnew<cr>:make<cr>
 " Spellcheck
-map <F7> :!ispell -x %<cr>:e!<cr><cr>
+noremap <F7> :!ispell -x %<cr>:e!<cr><cr>
+
+" TODO: Clean up the vimrc...
+noremap <F4> :AT<cr>
 
 " Build for a LaTeX file (assumes correct path and makefile)
 autocmd filetype tex map <F5> :w<cr>:make<cr>
-
-" Automatic closing brackets
-inoremap do<SPACE>{<CR> do<SPACE>{<CR>}<SPACE>while();<ESC>O
-inoremap do{<CR> do<SPACE>{<CR>}<SPACE>while();<ESC>O
-inoremap {<CR> {<CR>}<ESC>O
 
 " *********** Fuzzy Finder config *************
 " Remap Ctrl-T to open Fuzzy Finder
@@ -149,6 +147,8 @@ highlight PmenuSel guifg=#CCCCCC guibg=#000000 gui=bold ctermfg=1 ctermbg=0 cter
 "map <leader>fs :!find CLASSES -iname **<left> 
 map <leader>fs :Fsfind 
 map <leader>fg :Fsgrep 
+
+inoremap <leader><leader> <esc>
 
 " *********** Tagbar config *************
 " Don't waste screen with tips and blank lines
@@ -167,4 +167,176 @@ map <leader>cn :VCSAnnotate!<CR>
 set tags=./tags;/
 " Open a tag definition in a new tab
 map <C-CR> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+
+
+function! Get_IsP4File()
+    if $P4CONFIG != ""
+        " If no cfg is found, break after $N dirs
+        let max_up_dirs=15
+        let p4cfgpath = expand("%:p")
+        while (p4cfgpath != "/") && (max_up_dirs != 0)
+            let p4cfgpath = system("dirname " . p4cfgpath)
+            let p4cfgpath = substitute(p4cfgpath, '\n$', '', '')
+            let max_up_dirs = max_up_dirs - 1
+
+            let p4cfg = p4cfgpath . "/" . $P4CONFIG
+            if filereadable(p4cfg)
+                let max_up_dirs = 0
+                let b:IsP4File = 1
+                let b:P4PrjRoot = p4cfgpath . "/"
+            endif
+        endwhile
+    endif
+endfunction
+
+function! Get_P4_RelFileName()
+    call Get_IsP4File()
+    if exists("b:IsP4File")
+        let b:CurrFile_P4FileName = substitute(expand("%:p"), b:P4PrjRoot, "", "")
+    endif
+endfunction
+
+function! P4_Checkout()
+    call Get_IsP4File()
+    if exists("b:IsP4File")
+        if (confirm("Checkout from Perforce?", "&Yes\n&No", 1) == 1)
+            let cmdout = system("p4 edit " . expand("%:p"))
+            if v:shell_error == 0
+                set noreadonly
+            else
+                echoerr "Error running '" . "p4 edit " . expand("%:p") . "': " . cmdout
+            endif
+        endif
+    endif
+endfunction
+
+function! P4_Revert()
+    call Get_IsP4File()
+    if exists("b:IsP4File")
+        call system("p4 revert " . expand("%:p"))
+    endif
+endfunction
+
+function! P4_ListFilesEditedOutsideP4()
+    let cmd = "echo 'List of files edited outside of perforce in '`pwd`':' && p4 diff -se"
+    tabnew
+    setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+    execute '$read !' . cmd
+    setlocal nomodifiable
+endfunction
+
+
+function! P4_SetGuiMenu()
+    if strlen(expand("%:p")) > 0
+        call Get_IsP4File()
+        if exists("b:IsP4File")
+            amenu Perforce.Checkout :call P4_Checkout()<CR>
+            amenu Perforce.Files\ Edited\ Outside\ P4 :call P4_ListFilesEditedOutsideP4()<CR>
+        else
+            " We're not in a P4 project: remove p4 menu, if any
+            silent! aunmenu Perforce
+        endif
+    endif
+endfunction
+
+if !exists("au_p4_commands")
+  let au_p4_commands = 1
+  autocmd FileChangedRO * call P4_Checkout()
+  autocmd BufEnter * call P4_SetGuiMenu()
+endif
+
+
+
+
+
+" Find&Grep command wrapper: execute cmd, shows the results in a scratch buffer
+function! FG_EvalSysCmdInNewBuff(cmd)
+    tabnew
+    setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+    let verboseCmd = 'echo "`pwd`\$ ' . a:cmd . '" && ' . a:cmd
+    execute '$read !' . verboseCmd
+    setlocal nomodifiable
+endfunction
+
+" Wrap a normal action: ask the user for input, then call func with it
+function! FG_RequestInput_AndDo(msg, func)
+    let needle = input(a:msg)
+    if strlen(needle) > 0
+        execute 'let cmd = ' . a:func . '("'.needle.'")'
+        call FG_EvalSysCmdInNewBuff(cmd)
+    endif
+endfunction
+
+" Wrap a visual action: call func with whatever is selected under the cursor
+function! FG_V_GetTextForVisual_AndDo(func)
+    " Copy whatever is selected in visual mode
+    try
+        silent! let a_save = @a
+        silent! normal! gv"ay
+        silent! let needle = @a
+    finally
+        silent! let @a = a_save
+    endtry
+
+    " Remove whitespaces
+    let needle = substitute(needle, "\\n\\+","","g") 
+    let needle = substitute(needle, "\\r\\+","","g") 
+    let needle = substitute(needle, "^\\s\\+\\|\\s\\+$","","g") 
+
+    if strlen(needle) > 0
+        execute 'let cmd = ' . a:func . '("'.needle.'")'
+        call FG_EvalSysCmdInNewBuff(cmd)
+    endif
+endfunction
+
+" Wrap a normal action: call func with whatever is under the cursor
+function! FG_N_GetTextUnderCursor_AndDo(func)
+    let needle = expand("<cword>")
+    if strlen(needle) > 0
+        execute 'let cmd = ' . a:func . '("'.needle.'")'
+        call FG_EvalSysCmdInNewBuff(cmd)
+    endif
+endfunction
+
+
+" Wrap a find command: search for file "needle", show results in a new window
+function! FG_FindFile(needle)
+    return 'find . -type f | grep -i ' . a:needle
+endfunction
+
+" Wrap a grep command: search for needle, show results in a new window
+function! FG_SearchText(needle)
+    return '~/Nico.rc/fastgrep.sh "' . a:needle . '"'
+endfunction
+
+nmap <leader>f :call FG_N_GetTextUnderCursor_AndDo("FG_FindFile")<CR>
+vmap <leader>f :call FG_V_GetTextForVisual_AndDo("FG_FindFile")<CR>
+map  <leader>S :call FG_RequestInput_AndDo("Text search: ", "FG_SearchText")<CR>
+menu Pro&ject.Text\ &Search :call FG_RequestInput_AndDo("Text search: ", "FG_SearchText")<CR>
+
+nmap <leader>s :call FG_N_GetTextUnderCursor_AndDo("FG_SearchText")<CR>
+vmap <leader>s :call FG_V_GetTextForVisual_AndDo("FG_SearchText")<CR>
+map  <leader>F :call FG_RequestInput_AndDo("Find file: ", "FG_FindFile")<CR>
+menu Pro&ject.&Find\ File :call FG_RequestInput_AndDo("Find file: ", "FG_FindFile")<CR>
+
+
+
+noremap <leader>X :<C-R>*
+
+
+
+function! MoveTab(relOffset)
+    let newPos = tabpagenr() - 1 + a:relOffset
+    if newPos < 0
+        let newPos = 0
+    endif
+    execute "tabmove" newPos
+endfunction
+
+noremap <C-S-PageDown> :call MoveTab(1)<CR>
+noremap <C-S-PageUp>   :call MoveTab(-1)<CR>
+
+
+
+
 

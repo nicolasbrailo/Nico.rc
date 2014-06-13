@@ -5,12 +5,13 @@
 " won't reject these strings, it will instead open them and move the cursor to
 " the appropiate line.
 
-" TODO: Bug: filenames with spaces
+" TODO: Bug: filenames with spaces get treated by f-args as two args, then
+" breaks tabnew
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Exit when already loaded, there's no GUI or in compatible mode
 if exists("g:loaded_BetterTabNew") || !has("gui_running") || &cp
-  finish
+  " finish TODO: Development
 endif
 let g:loaded_BetterTabNew = 1
 let s:keepcpo = &cpo
@@ -52,7 +53,9 @@ function! BetterTabNew(...)
     " This will happen when trying to create a new file: just tabnew to
     " whatever the user requested, not our problem!
     if len(checked_fname) == 0
-        execute 'tabnew ' . fname
+        echo a:1
+        echo ':tabnew "' . fname . '"'
+        "execute ':tabnew "' . fname . '"'
         return
     endif
 

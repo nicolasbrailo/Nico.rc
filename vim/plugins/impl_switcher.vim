@@ -9,7 +9,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Exit when already loaded in compatible mode
 if exists("g:loaded_ImplSwitcher") || &cp
-  "finish " TODO: for development
+  finish
 endif
 let g:loaded_ImplSwitcher = 1
 let s:keepcpo = &cpo
@@ -61,11 +61,15 @@ if !exists("g:ImplSwitcher_alternativeExtensions")
 endif
 
 " Set to 1 to get a verbose description of the lookup process
-let g:ImplSwitcher_debugMode = 0
+if !exists("g:ImplSwitcher_debugMode")
+    let g:ImplSwitcher_debugMode = 0
+endif
 
 " The maximum number of directories up to look for. For example, for file
 " a/b/c/d/e.file, and a searchMaxDirUps=3 will look into a/b/c/d, /a/b/c and
 " /a/b will be the last directory to be searched
+" A value too low will result in alt-files not being found, a high value will
+" result in long search times. Per-project fine tunning might be needed
 if !exists("g:ImplSwitcher_searchMaxDirUps")
     let g:ImplSwitcher_searchMaxDirUps = 3
 endif
@@ -74,8 +78,8 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Set mappings
 
-noremap <F4> :call OpenCurrentImplFile()<cr>
-noremap <leader>h :call OpenCurrentImplFile()<cr>
+noremap <F4> :call ImplSwitcher_OpenCurrentImplFile()<cr>
+noremap <leader>h :call ImplSwitcher_OpenCurrentImplFile()<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -176,7 +180,10 @@ function! IsAltFileInDir(path, alt_files)
 endfunction
 
 
-
+" Splits fpath into its filename/path components
+" @param A file path
+" Returns a tuple consisting of dir/fname. dir will be an empty string if no
+" split is possible
 function! SplitDirname(fpath)
     let dir = system('dirname ' . a:fpath)
     " Remove whitespaces
@@ -184,17 +191,15 @@ function! SplitDirname(fpath)
     let dir = substitute(dir, "\\r\\+","","g") 
     let dir = substitute(dir, "^\\s\\+\\|\\s\\+$","","g") 
 
-    if v:shell_error != 0
-        " TODO?
-    endif
-
-    if dir == '.'
+    " Return fpath if we can't split it
+    if v:shell_error != 0 || dir == '.'
         return ['', a:fpath]
     endif
 
     return [ dir, a:fpath[ len(dir)+1 : len(a:fpath) ] ]
 endfunction
 
+" Returns the parent directory for path
 function! OneDirUp(path)
     " SplitDirname will behave just as dirname, so for 'foo/bar/' we'll get
     " back 'foo'
@@ -202,7 +207,8 @@ function! OneDirUp(path)
     return new_dir
 endfunction
 
-
+" Splits fname into its filename and extension components
+" Returns a tuple
 function! SplitExtension(fname)
     let pos = len(a:fname)
     while pos > 0 && a:fname[pos] != '.'
@@ -214,6 +220,8 @@ function! SplitExtension(fname)
     return [name, ext]
 endfunction
 
+" Given an extension, returns a list of alternative extensions (eg: given
+" "cpp" it should return ["h", "hpp", ...]
 function! GetAlternativeExtensionsFor(extension)
     let ext_idx = index(g:ImplSwitcher_knownExtensions, a:extension)
 
@@ -240,6 +248,8 @@ function! GetAlternativeExtensionsFor(extension)
     return g:ImplSwitcher_alternativeExtensions[alt_idx]
 endfunction
 
+" Given a file name without extension and a list of possible extensions,
+" return a list of each possible combination of fname+ext
 function! GetAltFileNames(name, extensions)
     let alt_names = []
     for ext in a:extensions
@@ -249,6 +259,8 @@ function! GetAltFileNames(name, extensions)
     return alt_names
 endfunction
 
+" Given a file name, return all its possible alternative filenames (eg: given
+" "foo.cpp" it should return ["foo.h", "foo.hpp", ...]
 function! GetAlternativeFileNames(fname)
     if g:ImplSwitcher_debugMode
         echo "Looking alt files for " . a:fname

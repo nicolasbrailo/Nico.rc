@@ -1,7 +1,8 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =5
+let g:netrw_dirhist_cnt =6
 let g:netrw_dirhist_1='/home/brailovs/src/dev-nks-brailovs-linux/DataAccess/TTC/ARP/Interface'
 let g:netrw_dirhist_2='/home/brailovs/src/dev-nks-brailovs-linux/Framework/TestInfrastructure/ReflectionTestFramework/src/main/java/com/tomtom/test/reflection/interfaces/mapUpdate/callbacks'
 let g:netrw_dirhist_3='/home/brailovs/Nico.rc/vim/bundle/l9'
 let g:netrw_dirhist_4='/home/brailovs/Nico.rc/vim/bundle/l9/autoload'
 let g:netrw_dirhist_5='/home/brailovs/Nico.rc/vim/bundle/a/plugin'
+let g:netrw_dirhist_6='/home/brailovs/src/dev-nks-brailovs-linux/Build/Output/armv7-Android/Debug/Products/Android/Reference/ProcessHost/java/NavKitLibrary/build/obj/local/armeabi-v7a/obj/local/armeabi-v7a'

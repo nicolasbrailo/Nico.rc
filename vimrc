@@ -115,8 +115,11 @@ let tagbar_sort=0       " Don't sort alphabetically tagbar's list, show it in
 nmap <F8> :TagbarToggle<CR><C-W><C-W>
 source ~/.vim/plugins/tagbar.vim
 
-" *************** Other plugins ***************
+" *************** Impl Switcher config ***************
+let g:ImplSwitcher_searchMaxDirUps = 4
 source ~/.vim/plugins/impl_switcher.vim
+
+" *************** Other plugins ***************
 source ~/.vim/plugins/bettertabnew.vim
 source ~/.vim/plugins/tabmover.vim
 source ~/.vim/plugins/minimalistic_p4.vim

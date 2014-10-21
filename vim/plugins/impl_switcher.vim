@@ -78,20 +78,27 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Set mappings
 
-noremap <F4> :call ImplSwitcher_OpenCurrentImplFile()<cr>
-noremap <leader>h :call ImplSwitcher_OpenCurrentImplFile()<cr>
+noremap <F3> :call ImplSwitcher_OpenCurrentImplFile(0)<cr>
+noremap <F4> :call ImplSwitcher_OpenCurrentImplFile(1)<cr>
+noremap <leader>h :call ImplSwitcher_OpenCurrentImplFile(1)<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Impl
 
-" Creates a new tab with the alt-file for the current buffer
-function! ImplSwitcher_OpenCurrentImplFile()
+" Given a flag 'newtab' either creates a new tab with the alt-file for the current
+" or opens the alt-file in the current tab
+" @newtab determine whether open a new tab or in the current one.
+function! ImplSwitcher_OpenCurrentImplFile(newtab)
     let alt_file = FindAlternativeFiles(expand('%:p'))
     if alt_file == ''
         echo 'No alternative file found for ' . expand('%:p')
     else
-        execute 'tabnew '.alt_file
+        if a:newtab
+            execute 'tabnew '.alt_file
+        else
+            execute 'e '.alt_file
+        endif
     endif
 endfunction
 

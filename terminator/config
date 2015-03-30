@@ -14,7 +14,7 @@
 [profiles]
   [[default]]
     use_system_font = False
-    font = Inconsolata Medium 14
+    font = Inconsolata Medium 16
     scrollback_infinite = True
     show_titlebar = False
 [layouts]

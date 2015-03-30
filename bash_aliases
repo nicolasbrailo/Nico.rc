@@ -19,3 +19,5 @@ alias gf='~/Nico.rc/fastgrep.sh'
 alias fu='du -h --max-depth=1'
 alias folderusage='du -h --max-depth=1'
 
+alias screenlock='qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock'
+

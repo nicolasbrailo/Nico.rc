@@ -12,6 +12,7 @@ set ttyfast		 	 " Should redraw screen more smoothly
 set showmode		 " display the current mode in the status line
 set showcmd			 " Display partially-typed commands in the status line
 "set colorcolumn=80  " Show a red column for long lines
+set nomousehide      " Some times gvim decides to hide the cursor. Dunno why but I don't like it.
 
 
 " *********** Text formatting *************
@@ -55,7 +56,7 @@ set hidden				" It's OK to move to another buffer without saving the current
 set nocompatible		" Drop vi compatibility
 set wildmenu			" Don't autocomplete on cmd, show alternatives
 set mouse=a 			" Always use the mouse
-set visualbell			" Stop ugly beeping in Vim, flash the screen instead
+set novisualbell		" Stop ugly screen flashing
 set ruler				" Show current cursor position
 set relativenumber	    " Show numbering relative to cursor
 autocmd BufEnter * set relativenumber   " Don't know why won't work for new bufs

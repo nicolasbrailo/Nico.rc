@@ -4,7 +4,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Exit when already loaded or in compatible mode
 if exists("g:loaded_MinP4Integration") || &cp
-  finish
+   finish
 endif
 let g:loaded_MinP4Integration = 1
 let s:keepcpo = &cpo
@@ -26,10 +26,14 @@ function! Get_IsP4File()
         " If no cfg is found, break after $N dirs
         let max_up_dirs=15
         let p4cfgpath = expand("%:p")
-        while (p4cfgpath != "/") && (max_up_dirs != 0)
-            let p4cfgpath = system("dirname " . p4cfgpath)
+        while (max_up_dirs != 0)
+            let p4cfgpath = system("dirname '" . p4cfgpath . "'")
             let p4cfgpath = substitute(p4cfgpath, '\n$', '', '')
             let max_up_dirs = max_up_dirs - 1
+
+            if (p4cfgpath == "/")
+                let max_up_dirs = 0
+            endif
 
             let p4cfg = p4cfgpath . "/" . $P4CONFIG
             if filereadable(glob(p4cfg))

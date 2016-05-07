@@ -17,6 +17,7 @@
     font = Inconsolata Medium 16
     scrollback_infinite = True
     show_titlebar = False
+    background_image = None
 [layouts]
   [[default]]
     [[[child1]]]

@@ -14,7 +14,6 @@ set showcmd			 " Display partially-typed commands in the status line
 "set colorcolumn=80  " Show a red column for long lines
 set nomousehide      " Some times gvim decides to hide the cursor. Dunno why but I don't like it.
 
-
 " *********** Text formatting *************
 set wildmode=list:longest,full 	" Use tab-completions
 set nowrap						" Default to non wrapping mode
@@ -26,22 +25,6 @@ set beautify
 set autoindent
 set smartindent
 
-
-" *********** Spell checking *************
-" map <leader>sc :setlocal spell!<cr>
-" " Next misspell
-" map <leader>sn ]s
-" " Previous misspell
-" map <leader>sp [s
-" " Add ti dictionary
-" map <leader>sa zg
-" " Correct misspell
-" map <leader>s? z=
-
-filetype on
-filetype plugin indent on
-
-
 " *********** Search & replace *************
 set ignorecase	" case insensitive
 set smartcase	" case insensitive only if there is no uppercase
@@ -49,7 +32,6 @@ set incsearch	" incremental search
 set gdefault	" default to /g on replace
 set hls			" Highlight search results
 set showmatch	 	 " Show matching () {} []
-
 
 " *********** Misc Vim settings *************
 set hidden				" It's OK to move to another buffer without saving the current
@@ -70,13 +52,11 @@ inoremap <leader><leader> <esc>
 " Paste clipboard as a command
 noremap <leader>X :<C-R>*
 
-
 " *********** File specific stuff *************
 " autoindent with two spaces, always expand tabs
 autocmd FileType ruby,eruby,yaml set ai sw=2 sts=2 et
 " Build for a LaTeX file (assumes correct path and makefile)
 autocmd filetype tex map <F5> :w<cr>:make<cr>
-
 
 " *********** Mappings *************
 let mapleader = ","
@@ -94,9 +74,12 @@ map <leader>t :tabnew
 nmap <C-Left> :tabprev<CR>
 nmap <C-Right> :tabnex<CR>
 
-
-
 " *********** Plugins *************
+source ~/.vim/plugins/vim-pathogen/autoload/pathogen.vim
+execute pathogen#infect()
+
+filetype on
+filetype plugin indent on
 
 " *************** Ctags ***************
 set tags=./tags;/       " Search ctags file instead of just tags
@@ -124,9 +107,6 @@ source ~/.vim/plugins/impl_switcher.vim
 source ~/.vim/plugins/bettertabnew.vim
 source ~/.vim/plugins/tabmover.vim
 source ~/.vim/plugins/minimalistic_p4.vim
-
-
-
 
 
 

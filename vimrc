@@ -47,11 +47,6 @@ set nobackup            " Turn backup off, most stuff is in a repo anyway...
 set nowb                " Turn backup off, most stuff is in a repo anyway...
 set noswapfile          " Turn backup off, most stuff is in a repo anyway...
 
-" Alternative <esc> mapping, usefule when writing lots of text
-inoremap <leader><leader> <esc>
-" Paste clipboard as a command
-noremap <leader>X :<C-R>*
-
 " *********** File specific stuff *************
 " autoindent with two spaces, always expand tabs
 autocmd FileType ruby,eruby,yaml set ai sw=2 sts=2 et
@@ -61,6 +56,9 @@ autocmd filetype tex map <F5> :w<cr>:make<cr>
 " *********** Mappings *************
 let mapleader = ","
 let g:mapleader = ","
+
+" Alternative <esc> mapping, usefule when writing lots of text
+inoremap <leader><leader> <esc>
 
 " Paste from OS clipboard
 map <leader>p "+p

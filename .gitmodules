@@ -1,0 +1,8 @@
+[submodule "vim/plugins/vim-pathogen"]
+	path = vim/plugins/vim-pathogen
+	url = https://github.com/tpope/vim-pathogen.git
+
+[submodule "vim/bundle/rust.vim"]
+	path = vim/bundle/rust.vim
+	url = https://github.com/rust-lang/rust.vim.git
+

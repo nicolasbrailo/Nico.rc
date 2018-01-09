@@ -1,5 +1,6 @@
 [global_config]
   enabled_plugins = LaunchpadCodeURLHandler, APTURLHandler, LaunchpadBugURLHandler
+  suppress_multiple_term_dialog = True
 [keybindings]
   cycle_prev = <Control>Left
   go_next = <Control><Alt>w
@@ -17,6 +18,7 @@
     font = Inconsolata Medium 16
     scrollback_infinite = True
     show_titlebar = False
+    background_image = None
 [layouts]
   [[default]]
     [[[child1]]]

@@ -1,4 +1,3 @@
-
 def cache_to_disk(fname):
     import json
     try:
@@ -185,7 +184,17 @@ for day in archive:
         except ValueError:
             week_stats[week_of_year]['excercise'] = 0
 
-for week in week_stats:
+def delta_to_curr_wk(wk_num):
+    # Returns delta of wk_num to current week num
+    from datetime import datetime, timedelta
+    curr_wk = datetime.today().isocalendar()[1]
+    # Wrap-around (ie the "max-delta" is half a year)
+    return (curr_wk - wk_num) % (52/2)
+
+
+ordered_weeks = [n for i,n in sorted([(delta_to_curr_wk(n),n) for n in week_stats.keys()])]
+
+for week in ordered_weeks:
     msg = """Week {} stats: avg {} cal/day, {} cals {} goal. {} grams wb {} expected."""
     n = week_stats[week]['n']
     total_cals = week_stats[week]['totals']['calories']

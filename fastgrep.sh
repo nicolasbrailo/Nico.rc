@@ -89,7 +89,7 @@ function get_files_for() {
 
     # Get a basedir to print absolute paths
     basedir=`dirname $cache_file_path`
-    grep -i "$needle" $cache_file_path | awk "{print \"$basedir/\"\$1}"
+    grep --text -i "$needle" $cache_file_path | awk "{print \"$basedir/\"\$1}"
 }
 
 # Gets all the *unique* files which mach a string search. This is needed
@@ -206,6 +206,7 @@ GREPCACHE_CONFIG_FILE=`find_file_in_tree $GREPCACHE_CONFIG_BASE_FILE`
 GREPCACHE_BASE_FILE=.grepcache
 GREPCACHE_FILE=`find_file_in_tree $GREPCACHE_BASE_FILE`
 
+
 # If available load the config file
 if [ "${#GREPCACHE_CONFIG_FILE}" -gt 2 ]; then
     source $GREPCACHE_CONFIG_FILE
@@ -214,7 +215,7 @@ fi
 # We write everything to stderr so we can define an alias like 
 # fastgrep $@|grep $@
 # This keeps the highlighting as the user would expect
-while getopts "chr" opt; do
+while getopts "hclr" opt; do
     case "$opt" in
         h) echo -ne "$0 is a simple grep wrapper to speed up searches in a large" >&2
            echo -ne " set of files. If you find yourself running 'grep -r *' and" >&2
@@ -225,6 +226,7 @@ while getopts "chr" opt; do
            echo "Run options:" >&2
            echo "  -h: This help" >&2
            echo "  -r: Rebuild cache" >&2
+           echo "  -l: List interesting files (useful to verify config)" >&2
            echo "  -c: Configure cache (eg set exclude patterns)" >&2
            echo "" >&2
            echo "Tip: Adding this to .bashrc is very helpful:" >&2
@@ -248,6 +250,9 @@ while getopts "chr" opt; do
                           "$INCLUDE_PATTERN" "$new_include_pattern" \
                           $GREPCACHE_CONFIG_BASE_FILE
            echo "Wrote config file, you should now run $0 -r to rebuild the cache" >&2
+           exit ;;
+        l) echo "Listing interesting files..." >&2;
+           list_interesting_files "$INDEX_DIRS" "$EXCLUDE_PATTERN" "$INCLUDE_PATTERN"
            exit ;;
         r) echo "Rebuilding cache..." >&2;
            rebuild_cache ./$GREPCACHE_BASE_FILE "$INDEX_DIRS" "$EXCLUDE_PATTERN" "$INCLUDE_PATTERN"

@@ -1,19 +1,20 @@
 #!/bin/bash
 
-# About fastgrep: simple grep wrapper to speed up grep'ing through a large
-# set of file, for example a more or less big programming project. The idea
-# behind it is simple, just concat all the files in the project in a giant
-# blob (with a reference back to the original file), then grep that blob 
-# instead of greping through each file in the project; this way we save most
-# of the disk lookups + we can exclude greping through files which we already
-# know we won't care.
-#
-# Running some tests on an average sized project yielded a speedup from
-# about 10 seconds to 1 second, whereas for a large project (and index file
-# of around 200 MB) the speedup was from 3 minutes to around 14 seconds.
-# Please note these are anecdotical times and not a benchmark, since the speed
-# up experienced, if any, depends on a lot of variables.
-# 
+HOW_DOES_IT_WORK="""
+About fastgrep: simple grep wrapper to speed up grep'ing through a large
+set of files, eg a project with a few 100 or 1000 files. The concept is
+simple: concat all the files in the project in a giant blob (with a 
+reference back to the original file), then grep that blob instead of greping
+through each file in the project; this most of the disk lookups are avoided
+and we know exactly which files need to be grep'ed. Grepping again in the
+files found in the cache means no false positives. False negatives are
+possible with stale caches, so regular updating is recommended.
+
+Running some tests on an average sized project yielded a speedup from
+about 10 seconds to 1 second, whereas for a large project (and index file
+of around 200 MB) the speedup was from 3 minutes to around 14 seconds.
+Please note these are anecdotical times and not a benchmark.
+"""
 
 #####################################################
 # Cache building functions
@@ -228,6 +229,8 @@ while getopts "hclr" opt; do
            echo "  -r: Rebuild cache" >&2
            echo "  -l: List interesting files (useful to verify config)" >&2
            echo "  -c: Configure cache (eg set exclude patterns)" >&2
+           echo "" >&2
+           echo $HOW_DOES_IT_WORK >&2
            echo "" >&2
            echo "Tip: Adding this to .bashrc is very helpful:" >&2
            echo "    function fastgrep(){ $0 \"\$@\" | grep -i \"\$@\"; }" >&2

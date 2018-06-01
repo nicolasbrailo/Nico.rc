@@ -15,7 +15,7 @@ let s:keepcpo = &cpo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Set mappings
 
-noremap <C-S-PageDown> :call MoveTab(1)<CR>
+noremap <C-S-PageDown> :call MoveTab(2)<CR>
 noremap <C-S-PageUp>   :call MoveTab(-1)<CR>
 
 

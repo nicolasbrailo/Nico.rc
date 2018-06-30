@@ -1,14 +1,12 @@
 #!/bin/bash
 
-if [ ! -e ~/Nico.rc ]; then 
-	echo "Nico.rc wasn't found in the home directory."
-	echo "Please specify Nico.rc's path."
-	exit 1;
-fi
+RC_PATH=`pwd`
 
 cd ~
-ln -s ~/Nico.rc/vimrc ~/.vimrc
-ln -s ~/Nico.rc/vim ~/.vim
+ln -s $RC_PATH/vimrc ~/.vimrc
+ln -s $RC_PATH/vim ~/.vim
 mkdir -p ~/.config/terminator
-ln -s ~/Nico.rc/terminator/config ~/.config/terminator/config
-cd -
+ln -s $RC_PATH/terminator/config ~/.config/terminator/config
+ln -s $RC_PATH/easystroke ~/.easystroke
+cd $RC_PATH
+

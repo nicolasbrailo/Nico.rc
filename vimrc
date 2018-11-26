@@ -4,7 +4,7 @@
 colorscheme torte
 set guifont=Inconsolata\ Medium\ 14
 syntax on	    	 " Turn on syntax highlighting
-set synmaxcol=300    " Only do syntax highlighting for the first 300 cols 
+set synmaxcol=400    " Only do syntax highlighting for the first N cols 
 set number		 	 " Show line numbers
 "set cursorline	     " Show in which line the cursor is in
 set ttyfast		 	 " Should redraw screen more smoothly
@@ -57,7 +57,7 @@ autocmd filetype tex map <F5> :w<cr>:make<cr>
 let mapleader = ","
 let g:mapleader = ","
 
-" Alternative <esc> mapping, usefule when writing lots of text
+" Alternative <esc> mapping, useful when writing lots of text
 inoremap <leader><leader> <esc>
 
 " Paste from OS clipboard
@@ -72,10 +72,6 @@ map <leader>t :tabnew
 nmap <C-Left> :tabprev<CR>
 nmap <C-Right> :tabnex<CR>
 
-" *********** Plugins *************
-"source ~/.vim/plugins/vim-pathogen/autoload/pathogen.vim
-"execute pathogen#infect()
-
 filetype on
 filetype plugin indent on
 
@@ -88,6 +84,10 @@ map <C-CR> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 " Find and grep integration: use my fastgrep wrapper instead of plain grep
 let g:FG_grepCommand = '~/src/Nico.rc/fastgrep.sh'
 source ~/.vim/plugins/findgrep.vim
+" map ,fs to search files
+"map <leader>fs :!find CLASSES -iname **<left> 
+map <leader>fs :Fsfind 
+map <leader>fg :Fsgrep 
 
 " *************** Tagbar config ***************
 let tagbar_compact=1    " Don't waste screen with tips and blank lines
@@ -104,39 +104,11 @@ source ~/.vim/plugins/impl_switcher.vim
 " *************** Other plugins ***************
 source ~/.vim/plugins/bettertabnew.vim
 source ~/.vim/plugins/tabmover.vim
-source ~/.vim/plugins/minimalistic_p4.vim
 
-
-
+" *********** Plugins *************
 """""""""" STUFF I SHOULD CLEAN?
-
 " Do I need pathogen at all?
+"source ~/.vim/plugins/vim-pathogen/autoload/pathogen.vim
+"execute pathogen#infect()
 "call pathogen#infect()
-
-
-" Used to lock commits
-nmap <leader>l O# checkinlock - HERE BE DRAGONS<ESC>:w<CR>
-
-" Spellcheck
-noremap <F7> :!ispell -x %<cr>:e!<cr><cr>
-
-" *********** Fuzzy Finder config *************
-" Remap Ctrl-T to open Fuzzy Finder
-" map <C-T> :FufFile<CR>
-
-" Makes Fuzzy finder not burn your eyes: grey menu with black letters
-highlight Pmenu guifg=#000000 guibg=#CCCCCC gui=bold ctermfg=0 ctermbg=1 cterm=bold
-" Makes Fuzzy finder not burn your eyes: selected item grey with black bg
-highlight PmenuSel guifg=#CCCCCC guibg=#000000 gui=bold ctermfg=1 ctermbg=0 cterm=bold
-" The previous two lines have the nice side effect of making the autocomplete
-" menu suck less (pink, black and white? Really?)
-
-" Because I still don't know how to use FF, let's map ,fs to search files too
-"map <leader>fs :!find CLASSES -iname **<left> 
-map <leader>fs :Fsfind 
-map <leader>fg :Fsgrep 
-
-" Display svn annotations
-map <leader>cn :VCSAnnotate!<CR>
-
 

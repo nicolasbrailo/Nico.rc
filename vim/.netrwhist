@@ -1,5 +1,5 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =8
+let g:netrw_dirhist_cnt =9
 let g:netrw_dirhist_1='/home/brailovs/src/brailovs14-dev-nks/Engines/MapUpdate/Test/ComponentTest'
 let g:netrw_dirhist_2='/home/brailovs/src/brailovs14-nss_tooling/Shadowfax/public'
 let g:netrw_dirhist_3='/home/brailovs/src/brailovs14-nss_tooling/Shadowfax/public/scripts'
@@ -8,3 +8,4 @@ let g:netrw_dirhist_5='/home/brailovs/src/brailovs14-dev-nks/Engines/MapUpdate/M
 let g:netrw_dirhist_6='/home/brailovs/src/AndroidLibTest/app/build'
 let g:netrw_dirhist_7='/home/brailovs/src/navui-main'
 let g:netrw_dirhist_8='/home/brailovs/src/prototype-nemo/ev-services/response_manager'
+let g:netrw_dirhist_9='/home/brailovs/.local/share/virtualenvs'

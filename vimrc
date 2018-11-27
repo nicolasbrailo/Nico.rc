@@ -109,3 +109,5 @@ source ~/.vim/plugins/tabmover.vim
 " source ~/.vim/autoload/pathogen.vim
 execute pathogen#infect()
 
+let g:vimwiki_list = [{'path': '~/src/nicowiki', 'path_html': '~/src/nicowiki/html/'}]
+

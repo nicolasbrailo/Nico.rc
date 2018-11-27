@@ -106,9 +106,6 @@ source ~/.vim/plugins/bettertabnew.vim
 source ~/.vim/plugins/tabmover.vim
 
 " *********** Plugins *************
-"""""""""" STUFF I SHOULD CLEAN?
-" Do I need pathogen at all?
-"source ~/.vim/plugins/vim-pathogen/autoload/pathogen.vim
-"execute pathogen#infect()
-"call pathogen#infect()
+" source ~/.vim/autoload/pathogen.vim
+execute pathogen#infect()
 

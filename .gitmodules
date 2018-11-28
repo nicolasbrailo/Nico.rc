@@ -6,3 +6,6 @@
 	path = vim/bundle/rust.vim
 	url = https://github.com/rust-lang/rust.vim.git
 
+[submodule "vim/bundle/vimwiki"]
+	path = vim/bundle/vimwiki
+	url = https://github.com/vimwiki/vimwiki.git

@@ -112,9 +112,10 @@ execute pathogen#infect()
 " Vimwikis
 let nicowiki = {}
 let nicowiki.path = '~/src/nicowiki'
-let nicowiki.path_html = '~/src/nicowiki/html/'
 let nicowiki.ext = '.wiki.txt'
+let nicowiki.syntax = 'markdown'
 let nicowiki.auto_toc = 1
-let nicowiki.auto_export = 1
+" HTML not supported with markdown " let nicowiki.auto_export = 1
+" HTML not supported with markdown " let nicowiki.path_html = '~/src/nicowiki/html/'
 let g:vimwiki_list = [nicowiki]
 

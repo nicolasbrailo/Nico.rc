@@ -106,8 +106,8 @@ source ~/.vim/plugins/impl_switcher.vim
 " Add to bashrc if GPG complains " export GPG_TTY
 let g:GPGPreferArmor=1
 let g:GPGPreferSign=1
-let gpgLvl1 = {'ext': 'secure.pwd.wiki.txt', 'key': 'nicolasbrailo+pwd+secure@gmail.com'}
-let gpgLvl2 = {'ext': 'general.pwd.wiki.txt', 'key': 'nicolasbrailo+pwd+general@gmail.com'}
+let gpgLvl1 = {'ext': 'secure.pwd', 'key': 'nicolasbrailo+pwd+secure@gmail.com'}
+let gpgLvl2 = {'ext': 'general.pwd', 'key': 'nicolasbrailo+pwd+general@gmail.com'}
 let g:GPGFileDefaults = [gpgLvl1, gpgLvl2]
 
 source ~/.vim/plugins/config_gnupg.vim
@@ -117,8 +117,24 @@ source ~/.vim/plugins/gnupg.vim
 source ~/.vim/plugins/bettertabnew.vim
 source ~/.vim/plugins/tabmover.vim
 
+
 " *********** Plugins *************
 execute pathogen#infect()
+
+" Handle VimWiki links in the format of vlocal: to bypass vimwiki syntax
+" (which screwes with my custom gnupg folding)
+function! VimwikiLinkHandler(link)
+    let scheme = 'vlocal:'
+    let pos = match(a:link, scheme)
+    if pos != -1
+        let path = a:link[pos + len(scheme) : ]
+        exec 'tabnew ' . path
+        return 1
+    endif
+
+    " Use default hanlder
+    return 0
+endfunction
 
 " Vimwikis
 let nicowiki = {}

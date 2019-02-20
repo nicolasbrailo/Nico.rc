@@ -106,12 +106,23 @@ source ~/.vim/plugins/impl_switcher.vim
 " Add to bashrc if GPG complains " export GPG_TTY
 let g:GPGPreferArmor=1
 let g:GPGPreferSign=1
-let g:GPGDefaultRecipients=['nicolasbrailo@gmail.com']
-"let g:GPGFilePattern='*.\(gpg\|asc\|pgp\)'
-let g:GPGFilePattern='*.\(pwd_lvl1.wiki.txt\|pwd_lvl2.wiki.txt\)'
-" TODO Update on buf enter so that different default recipients are selected
+let gpgLvl1 = {'ext': 'pwd_lvl1.wiki.txt', 'key': 'nicolasbrailo@gmail.com'}
+let gpgLvl2 = {'ext': 'pwd_lvl2.wiki.txt', 'key': 'nicolasbrailo+pgp+lvl2@gmail.com'}
+let g:GPGFileDefaults = [gpgLvl1, gpgLvl2]
 
-function! SetGPGOptions()
+function! GPG_BuildFileFilter(fileDefaults)
+    " Build a GPG file extension filter out of the GPGFileDefaults config
+    let filter = ''
+    let sep = ''
+    for cfg in a:fileDefaults
+        let filter = filter . sep . cfg.ext
+        let sep = '\|'
+    endfor
+    return '*.\(' . filter . '\)'
+endfunction
+let g:GPGFilePattern = GPG_BuildFileFilter(g:GPGFileDefaults)
+
+function! GPG_SetBufferOptions()
     setlocal updatetime=30000 " 30 secs
     setlocal foldmethod=marker
     setlocal foldclose=all
@@ -124,9 +135,19 @@ function! SetGPGOptions()
         let l:fold_start_tok = &foldmarker[0 : match(&foldmarker, ',')-1]
         let l:first_ln = getline(v:foldstart)
         let l:fold_start_pos = match(l:first_ln, l:fold_start_tok) - 1
-        return l:first_ln[0 : l:fold_start_pos]
+        let extension = expand('%:t')
+        return extension . "|" . l:first_ln[0 : l:fold_start_pos]
     endfunction
     setlocal foldtext=PwdHideFoldText()
+
+    " Set default destinatary for file type
+    for cfg in g:GPGFileDefaults
+        let curr_file = expand('%:t')
+        let ext_pos = match(curr_file, cfg.ext)
+        if len(cfg.ext) + ext_pos == len(curr_file)
+            let g:GPGDefaultRecipients=[cfg.key]
+        endif
+    endfor
 endfunction
 
 augroup GnuPGExtra
@@ -134,7 +155,7 @@ augroup GnuPGExtra
     " `autocmd EVENT PATTERN ACTION` works. Use exec to get around that
 
     " Set extra options for all files defined in $GPGFilePattern
-    execute "autocmd BufReadCmd,FileReadCmd " . g:GPGFilePattern . " call SetGPGOptions()"
+    execute "autocmd BufReadCmd,FileReadCmd " . g:GPGFilePattern . " call GPG_SetBufferOptions()"
     " Close buffer after $updatetime
     execute "autocmd CursorHold " . g:GPGFilePattern . " bd"
 augroup END

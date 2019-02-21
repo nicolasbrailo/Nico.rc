@@ -24,6 +24,8 @@ function! GPG_SetBufferOptions()
     setlocal foldopen=insert
     setlocal foldminlines=0
 
+    highlight Folded guibg=gray20 guifg=linen
+
     " Make sure fold content is hidden, even if fold is a single line
     function! PwdHideFoldText()
         " Foldmarker is defined as $start_tok,$end_tok

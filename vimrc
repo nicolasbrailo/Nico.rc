@@ -60,10 +60,10 @@ let g:mapleader = ","
 " Alternative <esc> mapping, useful when writing lots of text
 inoremap <leader><leader> <esc>
 
-" Paste from OS clipboard
-map <leader>p "+p
-" Copy to OS clipboard
-map <leader>x "+y
+" " Paste from OS clipboard
+" map <leader>p "+p
+" " Copy to OS clipboard
+" map <leader>x "+y
 " Use ,c to delete a buffer and close its tab
 map <leader>c :bd<cr>
 " Ctrl-t and ,t: Write tabnew (wait for filename and <cr>)

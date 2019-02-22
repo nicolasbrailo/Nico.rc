@@ -4,6 +4,20 @@ if !exists("g:GPGFileDefaults")
     echoerr "g:GPGFileDefaults not defined, gnupg.vim won't work"
 endif
 
+" When using GPG_ClipboardCopyField, the clipboard will be wiped
+" $GPGClipboardWipeTimeout seconds after copying
+if !exists("g:GPGClipboardWipeTimeout")
+    let g:GPGClipboardWipeTimeout = 30
+endif
+
+if !exists("g:GPGLoginToken_User")
+    let g:GPGLoginToken_User = "user: "
+endif
+
+if !exists("g:GPGLoginToken_Pass")
+    let g:GPGLoginToken_Pass = "pass: "
+endif
+
 function! GPG_BuildFileFilter(fileDefaults)
     " Build a GPG file extension filter out of the GPGFileDefaults config
     let filter = ''
@@ -23,6 +37,9 @@ function! GPG_SetBufferOptions()
     setlocal foldclose=all
     setlocal foldopen=insert
     setlocal foldminlines=0
+
+    map <buffer> <leader>u :call GPG_ClipboardCopyField(g:GPGLoginToken_User)<CR>
+    map <buffer> <leader>p :call GPG_ClipboardCopyField(g:GPGLoginToken_Pass)<CR>
 
     highlight Folded guibg=gray20 guifg=linen
 
@@ -46,6 +63,45 @@ function! GPG_SetBufferOptions()
     endfor
 endfunction
 
+function! GPG_GrepInFold(keyword)
+    for ln_num in range(v:foldstart, v:foldend)
+        let ln = getline(ln_num)
+        let kwrd_pos = match(ln, a:keyword)
+        if kwrd_pos != -1
+            return ln[kwrd_pos + len(a:keyword) : ]
+        endif
+    endfor
+    echo a:keyword . " not found in fold"
+    return ""
+endfunction
+
+function! GPG_ClipboardCopyField(field_name)
+    function! GPG_ClipboardCleanTimeout(field_name, original_val, countdown, timerId)
+        " Cleans the clipboard after $countdown seconds
+
+        if @+ != a:original_val
+            " Bail out if the clipboard changed (ie manually removed value)
+            echo ""
+            return
+        endif
+
+        if a:countdown <= 0
+            let @+ = ""
+            echo ""
+        else
+            "echo a:field_name." in clipboard. Wipe in " . a:countdown
+            call timer_start(1000, function('GPG_ClipboardCleanTimeout', [a:field_name, a:original_val, a:countdown-1]))
+        endif
+    endfunction
+
+    let val = GPG_GrepInFold(a:field_name)
+    " If found, copy val to clipboard
+    if val != ""
+        let @+ = val
+        call GPG_ClipboardCleanTimeout(a:field_name, val, g:GPGClipboardWipeTimeout, 0)
+    endif
+endfunction
+
 augroup GnuPGExtra
     " Note: `autocmd EVENT $var ACTION` doesn't work, only 
     " `autocmd EVENT PATTERN ACTION` works. Use exec to get around that
@@ -55,4 +111,5 @@ augroup GnuPGExtra
     " Close buffer after $updatetime
     execute "autocmd CursorHold " . g:GPGFilePattern . " bd"
 augroup END
+
 

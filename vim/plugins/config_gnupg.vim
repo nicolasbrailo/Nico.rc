@@ -89,7 +89,7 @@ function! GPG_ClipboardCopyField(field_name)
             let @+ = ""
             echo ""
         else
-            "echo a:field_name." in clipboard. Wipe in " . a:countdown
+            echo a:field_name." in clipboard. Wipe in " . a:countdown
             call timer_start(1000, function('GPG_ClipboardCleanTimeout', [a:field_name, a:original_val, a:countdown-1]))
         endif
     endfunction

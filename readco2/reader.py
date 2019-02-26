@@ -2,6 +2,9 @@
 # * https://hackaday.io/project/5301-reverse-engineering-a-low-cost-usb-co-monitor/log/17909-all-your-base-are-belong-to-us
 # * https://blog.wooga.com/woogas-office-weather-wow-67e24a5338
 
+from collections import namedtuple
+import random
+import matplotlib.pyplot as plt
 import time, sys, fcntl, time, threading
 
 class UsbReader(object):
@@ -50,6 +53,7 @@ class CO2Reader(object):
         self.co2 = None
         self.temp = None
         self.rel_humidity = None
+        self.last_updated = None
 
         self._bg = threading.Thread(target=self._bg_update_readings)
         self._bg.start()
@@ -70,23 +74,82 @@ class CO2Reader(object):
     def _bg_update_readings(self):
         while self._running:
             op, val = self._get_next_op()
+            updated = True
             if op == 0x50:
                 self.co2 = val
             if op == 0x42:
                 self.temp = val/16.0-273.15
             if op == 0x44:
                 self.rel_humidity = val/100.0
+            else:
+                updated = False
+
+            if updated:
+                self.last_updated = time.time()
+
+class MockReader(namedtuple('MockReader', 'co2 temp rel_humidity last_updated')):
+    def stop(self):
+        pass
+
+class TimeSeries(object):
+    class Series(object):
+        def __init__(self):
+            self.series = []
+            self.max = None
+            self.min = None
+        
+        def add(self, val):
+            self.series.append(val)
+            if self.max is None or val > self.max:
+                self.max = val
+            if self.min is None or val < self.min:
+                self.min = val
+
+    def __init__(self, *kv):
+        self.series_map = {}
+        for k in kv:
+            self.series_map[k] = TimeSeries.Series()
+
+    def add(self, **kv):
+        for key in kv:
+            self.series_map[key].add(kv[key])
+
+    def report(self):
+        import matplotlib.pyplot as plt
+        fig, series_plot = plt.subplots()
+        series_plot.set_xlabel('time (s)')
+        colors = ['blue', 'red', 'green', 'cyan', 'magenta', 'yellow', 'black', 'white']
+        color_i = 0
+
+        for series_name in self.series_map:
+            # print("Max: {} Min: {}".format(
+            #     self.series_map[series_name].max, self.series_map[series_name].min))
+            series_plot.set_ylabel(series_name, color=colors[color_i])
+            series_plot.plot(self.series_map[series_name].series, color=colors[color_i])
+            series_plot.tick_params(axis='y', labelcolor=colors[color_i])
+            series_plot = series_plot.twinx()
+            color_i = (color_i + 1) % len(colors)
+
+        fig.tight_layout()  # otherwise the right y-label is slightly clipped
+        plt.show()
 
 
 if __name__ == "__main__":
     PRINT_FREQUENCY_SECONDS = 1
     # Arbitrary key
     key = [0xc4, 0xc6, 0xc0, 0x92, 0x40, 0x23, 0xdc, 0x96]
+    history = TimeSeries('temp', 'co2')
     reader = CO2Reader(UsbReader(sys.argv[1], key), key)
+    #reader = MockReader(2000 * random.random(), 30 * random.random(), None, None)
     try:
         while True:
             time.sleep(PRINT_FREQUENCY_SECONDS)
-            print("CO2: {0}\tTemp: {1}\tRH: {2}".format(reader.co2, reader.temp, reader.rel_humidity))
+            #reader = MockReader(2000 * random.random(), 30 * random.random(), None, None)
+            history.add(co2=reader.co2, temp=reader.temp)
+            print("{}: t={}, co2={}, rh={}, updated={}".format(
+                time.time(), reader.temp, reader.co2, reader.rel_humidity, reader.last_updated))
     except KeyboardInterrupt:
+        history.report()
         reader.stop()
+
 

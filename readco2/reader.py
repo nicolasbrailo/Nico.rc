@@ -4,6 +4,7 @@
 
 from collections import namedtuple
 import random
+from datetime import datetime
 import matplotlib.pyplot as plt
 import time, sys, fcntl, time, threading
 
@@ -97,6 +98,7 @@ class TimeSeries(object):
             self.series = []
             self.max = None
             self.min = None
+            self.scale = None
         
         def add(self, val):
             self.series.append(val)
@@ -106,6 +108,7 @@ class TimeSeries(object):
                 self.min = val
 
     def __init__(self, *kv):
+        self.start_timestamp = time.time()
         self.series_map = {}
         for k in kv:
             self.series_map[k] = TimeSeries.Series()
@@ -114,42 +117,80 @@ class TimeSeries(object):
         for key in kv:
             self.series_map[key].add(kv[key])
 
-    def report(self):
-        import matplotlib.pyplot as plt
+    def set_scales(self, **kv):
+        for key in kv:
+            self.series_map[key].scale = kv[key]
+
+    def report(self, out_fn=None):
         fig, series_plot = plt.subplots()
         series_plot.set_xlabel('time (s)')
         colors = ['blue', 'red', 'green', 'cyan', 'magenta', 'yellow', 'black', 'white']
-        color_i = 0
+        series_i = 0
 
         for series_name in self.series_map:
-            # print("Max: {} Min: {}".format(
-            #     self.series_map[series_name].max, self.series_map[series_name].min))
-            series_plot.set_ylabel(series_name, color=colors[color_i])
-            series_plot.plot(self.series_map[series_name].series, color=colors[color_i])
-            series_plot.tick_params(axis='y', labelcolor=colors[color_i])
+            series_plot.plot(self.series_map[series_name].series, color=colors[series_i])
+
+            series_plot.axhline(self.series_map[series_name].max, color=colors[series_i])
+            txt = "Max {}: {}".format(series_name, self.series_map[series_name].max)
+            series_plot.text(0.1, self.series_map[series_name].max, txt, color=colors[series_i])
+
+            series_plot.axhline(self.series_map[series_name].min, color=colors[series_i])
+            txt = "Min {}: {}".format(series_name, self.series_map[series_name].min)
+            series_plot.text(0.1, self.series_map[series_name].min, txt, color=colors[series_i])
+
+            series_plot.set_ylabel(series_name, color=colors[series_i])
+            series_plot.yaxis.set_label_coords(1.05,0.5)
+            series_plot.tick_params(axis='y', pad=1+35*series_i, labelcolor=colors[series_i])
+
+            if self.series_map[series_name].scale is not None:
+                series_plot.set_ylim(self.series_map[series_name].scale)
+
             series_plot = series_plot.twinx()
-            color_i = (color_i + 1) % len(colors)
+            series_i = (series_i + 1) % len(colors)
 
         fig.tight_layout()  # otherwise the right y-label is slightly clipped
-        plt.show()
+        plt.axis('off')
+
+        if out_fn is None: 
+            plt.show()
+        else:
+            plt.savefig(out_fn)
+
+        plt.close()
 
 
 if __name__ == "__main__":
-    PRINT_FREQUENCY_SECONDS = 1
+    UPDATE_FREQUENCY_SECONDS = 60
+    REPORT_FREQUENCY_SECONDS = 60 * 60 * 3
+
     # Arbitrary key
     key = [0xc4, 0xc6, 0xc0, 0x92, 0x40, 0x23, 0xdc, 0x96]
+
     history = TimeSeries('temp', 'co2')
+    history.set_scales(temp=[0,30], co2=[0,3000])
+
     reader = CO2Reader(UsbReader(sys.argv[1], key), key)
-    #reader = MockReader(2000 * random.random(), 30 * random.random(), None, None)
+
     try:
         while True:
-            time.sleep(PRINT_FREQUENCY_SECONDS)
-            #reader = MockReader(2000 * random.random(), 30 * random.random(), None, None)
+            time.sleep(UPDATE_FREQUENCY_SECONDS)
             history.add(co2=reader.co2, temp=reader.temp)
+
             print("{}: t={}, co2={}, rh={}, updated={}".format(
                 time.time(), reader.temp, reader.co2, reader.rel_humidity, reader.last_updated))
+
+            if time.time() - history.start_timestamp > REPORT_FREQUENCY_SECONDS:
+                fn = "./co2_report_{}.png".format(datetime.now().strftime('%Y%m%d-%H%M%S'))
+                print("Wrote report to {}".format(fn))
+                history.report(fn)
+                history = TimeSeries('temp', 'co2')
+                history.set_scales(temp=[0,30], co2=[0,3000])
+
     except KeyboardInterrupt:
-        history.report()
+        fn = "./co2_report_{}.png".format(datetime.now().strftime('%Y%m%d-%H%M%S'))
+        print("Wrote report to {}".format(fn))
+        history.report(fn)
         reader.stop()
+
 
 

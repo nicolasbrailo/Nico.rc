@@ -124,6 +124,15 @@ source ~/.vim/plugins/tabmover.vim
 " *********** Plugins *************
 execute pathogen#infect()
 
+" Open NERDTree if no file is specified
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" Close NERDTree if it's the only remaining window
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+let g:NERDTreeQuitOnOpen=1
+map <leader>n :NERDTreeToggle<CR>
+
 " Handle VimWiki links in the format of vlocal: to bypass vimwiki syntax
 " (which screwes with my custom gnupg folding)
 function! VimwikiLinkHandler(link)

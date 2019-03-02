@@ -5,6 +5,8 @@
 from collections import namedtuple
 import random
 from datetime import datetime
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import time, sys, fcntl, time, threading
 
@@ -160,8 +162,8 @@ class TimeSeries(object):
 
 
 if __name__ == "__main__":
-    UPDATE_FREQUENCY_SECONDS = 60
-    REPORT_FREQUENCY_SECONDS = 60 * 60 * 3
+    UPDATE_FREQUENCY_SECONDS = 60 * 3
+    REPORT_FREQUENCY_SECONDS = 60 * 60 * 24
 
     # Arbitrary key
     key = [0xc4, 0xc6, 0xc0, 0x92, 0x40, 0x23, 0xdc, 0x96]

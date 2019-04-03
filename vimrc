@@ -21,7 +21,6 @@ set tabstop=4
 set shiftwidth=4
 set softtabstop=4
 set expandtab
-set beautify
 set autoindent
 set smartindent
 
@@ -119,6 +118,9 @@ source ~/.vim/plugins/gnupg.vim
 " *************** Other plugins ***************
 source ~/.vim/plugins/bettertabnew.vim
 source ~/.vim/plugins/tabmover.vim
+
+" TODO: Setup YouCompleteMe
+" https://github.com/Valloric/YouCompleteMe#c-family-semantic-completion
 
 
 " *********** Plugins *************

@@ -6,3 +6,6 @@
 	path = vim/bundle/vimwiki
 	url = https://github.com/vimwiki/vimwiki.git
 
+[submodule "vim/bundle/YouCompleteMe"]
+	path = vim/bundle/YouCompleteMe
+	url = https://github.com/Valloric/YouCompleteMe.git

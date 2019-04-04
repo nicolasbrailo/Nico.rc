@@ -119,8 +119,9 @@ source ~/.vim/plugins/gnupg.vim
 source ~/.vim/plugins/bettertabnew.vim
 source ~/.vim/plugins/tabmover.vim
 
-" TODO: Setup YouCompleteMe
 " https://github.com/Valloric/YouCompleteMe#c-family-semantic-completion
+let g:ycm_global_ycm_extra_conf = '~/.vim/ycm_extraconf.py'
+let g:ycm_disable_for_files_larger_than_kb = 50
 
 
 " *********** Plugins *************

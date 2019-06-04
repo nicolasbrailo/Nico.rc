@@ -3,6 +3,7 @@
 " *********** Look and feel *************
 colorscheme torte
 set guifont=Inconsolata\ Medium\ 14
+set guifont=Menlo-Regular:h14
 syntax on	    	 " Turn on syntax highlighting
 set synmaxcol=400    " Only do syntax highlighting for the first N cols 
 set number		 	 " Show line numbers
@@ -46,12 +47,6 @@ set nobackup            " Turn backup off, most stuff is in a repo anyway...
 set nowb                " Turn backup off, most stuff is in a repo anyway...
 set noswapfile          " Turn backup off, most stuff is in a repo anyway...
 
-" *********** File specific stuff *************
-" autoindent with two spaces, always expand tabs
-autocmd FileType ruby,eruby,yaml set ai sw=2 sts=2 et
-" Build for a LaTeX file (assumes correct path and makefile)
-autocmd filetype tex map <F5> :w<cr>:make<cr>
-
 " *********** Mappings *************
 let mapleader = ","
 let g:mapleader = ","
@@ -66,7 +61,6 @@ inoremap <leader><leader> <esc>
 " Use ,c to delete a buffer and close its tab
 map <leader>c :bd<cr>
 " Ctrl-t and ,t: Write tabnew (wait for filename and <cr>)
-map <c-t> :tabnew 
 map <leader>t :tabnew 
 nmap <C-Left> :tabprev<CR>
 nmap <C-Right> :tabnex<CR>
@@ -119,6 +113,9 @@ source ~/.vim/plugins/gnupg.vim
 source ~/.vim/plugins/bettertabnew.vim
 source ~/.vim/plugins/tabmover.vim
 
+noremap <C-S-RIGHT> :call MoveTab(2)<CR>
+noremap <C-S-LEFT> :call MoveTab(-1)<CR>
+
 " https://github.com/Valloric/YouCompleteMe#c-family-semantic-completion
 let g:ycm_global_ycm_extra_conf = '~/.vim/ycm_extraconf.py'
 let g:ycm_disable_for_files_larger_than_kb = 50
@@ -155,13 +152,21 @@ function! VimwikiLinkHandler(link)
     return 0
 endfunction
 
+" Some custom coloring
+source ~/.vim/vimwiki.syntax.vim
+
 " Vimwikis
 let nicowiki = {}
 let nicowiki.path = '~/src/nicowiki'
 let nicowiki.ext = '.wiki.txt'
 let nicowiki.syntax = 'markdown'
 let nicowiki.auto_toc = 1
+let fbwiki = {}
+let fbwiki.path = '~/src/fbwiki'
+let fbwiki.ext = '.wiki.txt'
+let fbwiki.syntax = 'markdown'
+let fbwiki.auto_toc = 1
 " HTML not supported with markdown " let nicowiki.auto_export = 1
 " HTML not supported with markdown " let nicowiki.path_html = '~/src/nicowiki/html/'
-let g:vimwiki_list = [nicowiki]
+let g:vimwiki_list = [nicowiki, fbwiki]
 

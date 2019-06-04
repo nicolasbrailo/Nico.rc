@@ -4,8 +4,8 @@
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Exit when already loaded, there's no GUI or in compatible mode
-if exists("g:loaded_TabMover") || !has("gui_running") || &cp
+" Exit when already loaded or in compatible mode
+if exists("g:loaded_TabMover") || &cp
   finish
 endif
 let g:loaded_TabMover = 1
@@ -15,8 +15,8 @@ let s:keepcpo = &cpo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Set mappings
 
-noremap <C-S-PageDown> :call MoveTab(2)<CR>
-noremap <C-S-PageUp>   :call MoveTab(-1)<CR>
+" noremap <C-S-PageDown> :call MoveTab(2)<CR>
+" noremap <C-S-PageUp>   :call MoveTab(-1)<CR>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

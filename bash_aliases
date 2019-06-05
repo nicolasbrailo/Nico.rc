@@ -24,3 +24,12 @@ alias screenlock='qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock'
 GPG_TTY=`tty`
 export GPG_TTY
 
+# Configure history
+shopt -s histappend
+export HISTFILESIZE=1000000
+export HISTSIZE=1000000
+export HISTIGNORE='ls:bg:fg:history;cd'
+export PROMPT_COMMAND='history -a'
+
+
+

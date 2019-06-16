@@ -135,7 +135,25 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 let g:NERDTreeQuitOnOpen=1
-map <leader>n :NERDTreeToggle<CR>
+
+function! IsNerdTreeEnabled()
+    return exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1
+endfunction
+
+" Toggle NERDTree in the current buffer's directory
+function! ToggleInCurrBuffDir()
+    " If tab is already open then just toggle it (ie close it) ||
+    " if there is no saved file, then just toggle
+    if IsNerdTreeEnabled() || len(expand('%:p')) == 0
+        exec 'NERDTreeToggle'
+    else
+        exec 'NERDTreeFind'
+    endif
+endfunction
+
+map <leader>n :call ToggleInCurrBuffDir()<CR>
+
+" VimWiki ========================
 
 " Handle VimWiki links in the format of vlocal: to bypass vimwiki syntax
 " (which screwes with my custom gnupg folding)

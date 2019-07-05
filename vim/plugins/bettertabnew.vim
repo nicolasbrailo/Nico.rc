@@ -6,8 +6,8 @@
 " the appropiate line.
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Exit when already loaded, there's no GUI or in compatible mode
-if exists("g:loaded_BetterTabNew") || !has("gui_running") || &cp
+" Exit when already loaded or in compatible mode
+if exists("g:loaded_BetterTabNew") || &cp
     finish
 endif
 let g:loaded_BetterTabNew = 1

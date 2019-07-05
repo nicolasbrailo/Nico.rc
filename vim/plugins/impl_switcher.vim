@@ -78,9 +78,9 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Set mappings
 
-noremap <F3> :call ImplSwitcher_OpenCurrentImplFile(0)<cr>
-noremap <F4> :call ImplSwitcher_OpenCurrentImplFile(1)<cr>
-noremap <leader>h :call ImplSwitcher_OpenCurrentImplFile(1)<cr>
+" noremap <F3> :call ImplSwitcher_OpenCurrentImplFile(0)<cr>
+" noremap <F4> :call ImplSwitcher_OpenCurrentImplFile(1)<cr>
+" noremap <leader>h :call ImplSwitcher_OpenCurrentImplFile(1)<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

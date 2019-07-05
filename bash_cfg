@@ -33,6 +33,10 @@ export PS1='\A \h:\w$( _scm_prompt " (%s)") \$ '
 if [ -z "$THIS_HOST_COLOR" ]; then export THIS_HOST_COLOR=103; fi
 export COLOR_RESET='\[\e[0m\]'
 export COLOR_SET='\[\e['$THIS_HOST_COLOR'm\]'
-export PS1='\A '$COLOR_SET'\h'$COLOR_RESET':\w$( _scm_prompt " (%s)") \$ '
+if [ -n "$(LC_ALL=C type -t _scm_prompt)" ] && [ "$(LC_ALL=C type -t _scm_prompt)" = function ]; then
+  export PS1='\A '$COLOR_SET'\h'$COLOR_RESET':\w$( _scm_prompt " (%s)") \$ ';
+else
+  export PS1='\A '$COLOR_SET'\h'$COLOR_RESET':\w\$ ';
+fi
 
 

@@ -1,11 +1,3 @@
-## Add this script to .bashrc like this:
-#
-# if [ -f ~/Nico.rc/bash_aliases ]; then
-#     . ~/Nico.rc/bash_aliases
-# fi
-#
-#
-
 # Disable annoying ubuntu global menu
 ## This takes care of the annoying "menu timeout" in gvim when using KDE
 ## If using gnome or unity it's probably a good idea to comment this out
@@ -31,5 +23,16 @@ export HISTSIZE=1000000
 export HISTIGNORE='ls:bg:fg:history;cd'
 export PROMPT_COMMAND='history -a'
 
+export EDITOR=vim
+
+# Safe PS1
+export PS1='\A \h:\w$( _scm_prompt " (%s)") \$ '
+
+# Color PS1
+# Pick an annoying default color, to remind myself to change it
+if [ -z "$THIS_HOST_COLOR" ]; then export THIS_HOST_COLOR=103; fi
+export COLOR_RESET='\[\e[0m\]'
+export COLOR_SET='\[\e['$THIS_HOST_COLOR'm\]'
+export PS1='\A '$COLOR_SET'\h'$COLOR_RESET':\w$( _scm_prompt " (%s)") \$ '
 
 

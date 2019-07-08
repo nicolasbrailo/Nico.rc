@@ -39,4 +39,11 @@ else
   export PS1='\A '$COLOR_SET'\h'$COLOR_RESET':\w\$ ';
 fi
 
+function lintandreview() {
+  if [ `arc lint --never-apply-patches | tee /dev/tty | wc -l` != 1 ]; then
+    echo "Lint warnings detected, no review created";
+  else
+    jf submit
+  fi
+}
 

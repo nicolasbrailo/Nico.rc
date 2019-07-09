@@ -264,10 +264,10 @@ while getopts "hclr" opt; do
 done
 
 if [ "${#GREPCACHE_FILE}" -lt 2 ]; then
-    echo "Cache file $GREPCACHE_BASE_FILE not found." >&2
-    echo "Run $0 -r in the root of the project." >&2
-    exit
+    echo "Cache file $GREPCACHE_BASE_FILE not found. Defaulting to plain grep..." >&2
+    echo "  Run $0 -r in the root of the project to enable fastgrep." >&2
+    grep -nri $@
+else
+  wrapped_grep $GREPCACHE_FILE "$@"
 fi
-
-wrapped_grep $GREPCACHE_FILE "$@"
 

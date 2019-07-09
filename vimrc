@@ -80,7 +80,6 @@ nmap <leader>1 :TagbarToggle<CR><C-W><C-W>
 noremap <F4> :call ImplSwitcher_OpenCurrentImplFile(1)<cr>
 nmap <leader>2 :call ImplSwitcher_OpenCurrentImplFile(1)<cr>
 map <leader>f :call FG_RequestInput_AndDo("Find file: ", "FG_FindFile")<CR>
-map <leader>g :call FG_RequestInput_AndDo("Text search: ", "FG_SearchText")<CR>
 
 " *************** Ctags ***************
 set tags=./tags;/       " Search ctags file instead of just tags

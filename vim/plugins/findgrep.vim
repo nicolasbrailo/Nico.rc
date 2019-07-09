@@ -15,13 +15,13 @@ let s:keepcpo = &cpo
 
 nmap <leader>s :call FG_N_GetTextUnderCursor_AndDo("FG_SearchText")<CR>
 vmap <leader>s :call FG_V_GetTextForVisual_AndDo("FG_SearchText")<CR>
-map  <leader>F :call FG_RequestInput_AndDo("Find file: ", "FG_FindFile")<CR>
-menu Pro&ject.&Find\ File :call FG_RequestInput_AndDo("Find file: ", "FG_FindFile")<CR>
+map  <leader>S :call FG_RequestInput_AndDo("Text search: ", "FG_SearchText")<CR>
+menu Pro&ject.Text\ &Search :call FG_RequestInput_AndDo("Text search: ", "FG_SearchText")<CR>
 
 nmap <leader>f :call FG_N_GetTextUnderCursor_AndDo("FG_FindFile")<CR>
 vmap <leader>f :call FG_V_GetTextForVisual_AndDo("FG_FindFile")<CR>
-map  <leader>S :call FG_RequestInput_AndDo("Text search: ", "FG_SearchText")<CR>
-menu Pro&ject.Text\ &Search :call FG_RequestInput_AndDo("Text search: ", "FG_SearchText")<CR>
+map  <leader>F :call FG_RequestInput_AndDo("Find file: ", "FG_FindFile")<CR>
+menu Pro&ject.&Find\ File :call FG_RequestInput_AndDo("Find file: ", "FG_FindFile")<CR>
 
 
 

@@ -91,6 +91,12 @@ map <C-CR> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 let g:FG_grepCommand = '~/Nico.rc/fastgrep.sh'
 source ~/.vim/plugins/findgrep.vim
 
+" If $VIM_PATH is not empty, adding it to path so that #include searches work
+" Eg:
+"   if there's an #include "foo/bar/baz.h"
+"   located in /path/to/file/foo/bar/baz.h
+"   export VIM_PATH=/path/to/file
+" Should work with multiple paths split with a comma
 if !empty($VIM_PATH)
   set path+=$VIM_PATH
 endif

@@ -91,6 +91,10 @@ map <C-CR> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 let g:FG_grepCommand = '~/Nico.rc/fastgrep.sh'
 source ~/.vim/plugins/findgrep.vim
 
+if !empty($VIM_PATH)
+  set path+=$VIM_PATH
+endif
+
 " *************** Tagbar config ***************
 let tagbar_compact=1    " Don't waste screen with tips and blank lines
 let tagbar_sort=0       " Don't sort alphabetically tagbar's list, show it in

@@ -1,0 +1,20 @@
+set -g default-command "${SHELL}"
+set -g history-limit 500000
+set -s default-terminal "screen-256color"
+set -s escape-time 0
+
+set-window-option -g xterm-keys on
+unbind-key -n C-Left
+unbind-key -n C-Right
+
+# Don't show status bar
+set -g status off
+
+# Shortcut to select up and down pane, without prefix and without repeat.
+# Without these bindings a C-b Up is "sticky" until a timeout
+bind -n C-Up select-pane -U
+bind -n C-Down select-pane -D
+
+# Scrolling with mouse wheel
+set -g mouse on
+

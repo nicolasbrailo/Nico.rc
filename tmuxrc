@@ -18,3 +18,6 @@ bind -n C-Down select-pane -D
 # Scrolling with mouse wheel
 set -g mouse on
 
+# Binding to clear history and scrollback
+bind -n C-k send-keys -R \; clear-history
+

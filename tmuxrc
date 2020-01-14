@@ -26,3 +26,8 @@ bind -n C-k send-keys -R \; clear-history
 
 # Resize window when terminal size changes, even if coming from smaller client
 set-window-option -g aggressive-resize
+
+# Better copy and scrollback mode
+unbind -T copy-mode-vi MouseDragEnd1Pane
+bind-key -T copy-mode-vi y send-keys -X copy-selection
+

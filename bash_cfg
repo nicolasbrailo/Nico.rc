@@ -25,6 +25,10 @@ export PROMPT_COMMAND='history -a'
 
 export EDITOR=vim
 
+# Make C-w stop on slashes and spaces (instead of space only)
+stty werase undef
+bind '\C-w:unix-filename-rubout'
+
 # Safe PS1
 export PS1='\A \h:\w$( _scm_prompt " (%s)") \$ '
 

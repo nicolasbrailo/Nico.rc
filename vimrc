@@ -81,6 +81,9 @@ noremap <F4> :call ImplSwitcher_OpenCurrentImplFile(1)<cr>
 nmap <leader>2 :call ImplSwitcher_OpenCurrentImplFile(1)<cr>
 map <leader>f :call FG_RequestInput_AndDo("Find file: ", "FG_FindFile")<CR>
 
+" Add mapping to toggle line nums, since I always forget that nornu != nonu
+cabbrev nonum set norelativenumber | set nonumber
+
 " *************** Ctags ***************
 set tags=./tags;/       " Search ctags file instead of just tags
 " Open a tag definition in a new tab

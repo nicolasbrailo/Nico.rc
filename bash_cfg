@@ -47,7 +47,41 @@ function lintandreview() {
   if [ `arc lint --never-apply-patches | tee /dev/tty | wc -l` != 1 ]; then
     echo "Lint warnings detected, no review created";
   else
-    jf submit
+    jf submit --draft
   fi
+}
+
+function macnotify() {
+  MSG=$1
+  TITLE=$2
+
+  NOT_DESC="display notification \"$MSG\" sound name \"\""
+  if [[ $TITLE ]]; then
+       NOT_DESC="$NOT_DESC with title \"$TITLE\""
+  fi
+
+  osascript -e "$NOT_DESC"
+}
+
+function rundiskmon() {
+  DISK=$1
+  MAX_DISK_USE_PCT=95
+  while true; do 
+    if [[ $DISK ]]; then
+      df -P -H | grep $DISK
+      if [[ `df -P -H | grep $DISK | wc -l` -eq 1 ]]; then
+        USE_PCT=`df -P -H | grep $DISK | awk '{print $5}' | tr -d '%'`
+        if [[ $USE_PCT -gt $MAX_DISK_USE_PCT ]]; then
+          echo "DANGER" "Running low on disk space. Usage is $USE_PCT, max usage is $MAX_DISK_USE_PCT"
+          macnotify "DANGER" "Running low on disk space"
+        fi
+      fi
+    else
+      df -P -H
+    fi
+
+    sleep 10
+    clear
+  done
 }
 

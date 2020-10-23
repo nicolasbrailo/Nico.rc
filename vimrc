@@ -73,6 +73,10 @@ map <leader>c :bd<cr>
 map <leader>t :tabnew 
 nmap <C-Left> :tabprev<CR>
 nmap <C-Right> :tabnex<CR>
+" tmux+iterm send these escape sequnces, whereas tmux+iterm+et don't
+" Adding this map makes it behave nicely in both cases
+nmap [1;5D :tabprev<CR>
+nmap [1;5C :tabnext<CR>
 
 " FN mappings
 nmap <F8> :TagbarToggle<CR><C-W><C-W>

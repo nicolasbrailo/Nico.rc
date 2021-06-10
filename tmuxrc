@@ -17,9 +17,6 @@ bind -n C-Down select-pane -D
 
 # Scrolling with mouse wheel
 set -g mouse on
-# Pane resize with mouse wheel
-set -g mode-mouse on
-set -g mouse-resize-pane on
 
 # Binding to clear history and scrollback
 bind -n C-k send-keys -R \; clear-history

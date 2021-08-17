@@ -145,6 +145,9 @@ source ~/.vim/plugins/tabmover.vim
 
 noremap <C-S-RIGHT> :call MoveTab(2)<CR>
 noremap <C-S-LEFT> :call MoveTab(-1)<CR>
+" tmux/iterm send escape sequences instead of C-S-left/right
+noremap [1;6C :call MoveTab(2)<CR>
+noremap [1;6D :call MoveTab(-1)<CR>
 
 " https://github.com/Valloric/YouCompleteMe#c-family-semantic-completion
 let g:ycm_global_ycm_extra_conf = '~/.vim/ycm_extraconf.py'

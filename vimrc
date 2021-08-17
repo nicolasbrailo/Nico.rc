@@ -108,6 +108,8 @@ if !empty($VIM_PATH)
   set path+=$VIM_PATH
 endif
 
+set path+=~/fbsource/fbcode/,~/fbsource/arvr/libraries/audio/fbaudio/
+
 " *************** Tagbar config ***************
 let tagbar_compact=1    " Don't waste screen with tips and blank lines
 let tagbar_sort=0       " Don't sort alphabetically tagbar's list, show it in
@@ -135,6 +137,9 @@ source ~/.vim/plugins/config_gnupg.vim
 source ~/.vim/plugins/gnupg.vim
 
 " *************** Other plugins ***************
+source ~/.vim/plugins/rainbow_parenthesis.vim
+:call RainPar_activate(1)
+
 source ~/.vim/plugins/bettertabnew.vim
 source ~/.vim/plugins/tabmover.vim
 
@@ -212,4 +217,5 @@ let fbwiki.auto_toc = 1
 " HTML not supported with markdown " let nicowiki.auto_export = 1
 " HTML not supported with markdown " let nicowiki.path_html = '~/src/nicowiki/html/'
 let g:vimwiki_list = [nicowiki, fbwiki]
+
 

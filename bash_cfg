@@ -24,7 +24,7 @@ stty werase undef
 bind '\C-w:unix-filename-rubout'
 
 # Safe PS1
-export PS1='\A \h:\w$( _scm_prompt " (%s)") \$ '
+export PS1='\A \h:\w \$ '
 
 # Color PS1
 # Pick an annoying default color, to remind myself to change it

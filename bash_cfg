@@ -7,12 +7,6 @@ export UBUNTU_MENUPROXY=0
 alias fastgrep='~/Nico.rc/fastgrep.sh'
 alias gf='~/Nico.rc/fastgrep.sh'
 
-# Create a folder-usage alias based on disk-usage
-alias fu='du -h --max-depth=1'
-alias folderusage='du -h --max-depth=1'
-
-alias screenlock='qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock'
-
 GPG_TTY=`tty`
 export GPG_TTY
 
@@ -43,6 +37,11 @@ else
   export PS1='\A '$COLOR_SET'\h'$COLOR_RESET':\w\$ ';
 fi
 
+# Add custom scripts to path
+if [ -d "$HOME/src/bin" ]; then
+    PATH="$HOME/src/bin:$PATH"
+fi
+
 function lintandreview() {
   if [ `arc lint --never-apply-patches | tee /dev/tty | wc -l` != 1 ]; then
     echo "Lint warnings detected, no review created";
@@ -50,38 +49,3 @@ function lintandreview() {
     jf submit --draft
   fi
 }
-
-function macnotify() {
-  MSG=$1
-  TITLE=$2
-
-  NOT_DESC="display notification \"$MSG\" sound name \"\""
-  if [[ $TITLE ]]; then
-       NOT_DESC="$NOT_DESC with title \"$TITLE\""
-  fi
-
-  osascript -e "$NOT_DESC"
-}
-
-function rundiskmon() {
-  DISK=$1
-  MAX_DISK_USE_PCT=95
-  while true; do 
-    if [[ $DISK ]]; then
-      df -P -H | grep $DISK
-      if [[ `df -P -H | grep $DISK | wc -l` -eq 1 ]]; then
-        USE_PCT=`df -P -H | grep $DISK | awk '{print $5}' | tr -d '%'`
-        if [[ $USE_PCT -gt $MAX_DISK_USE_PCT ]]; then
-          echo "DANGER" "Running low on disk space. Usage is $USE_PCT, max usage is $MAX_DISK_USE_PCT"
-          macnotify "DANGER" "Running low on disk space"
-        fi
-      fi
-    else
-      df -P -H
-    fi
-
-    sleep 10
-    clear
-  done
-}
-

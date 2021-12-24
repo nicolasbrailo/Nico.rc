@@ -1,10 +1,25 @@
 local wezterm = require 'wezterm';
 local DevSrv = "devbig038.cln2.facebook.com"
 
+-- Enable config tab title with a user var
+wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+  local pane_title = tab.active_pane.title
+  local user_title = tab.active_pane.user_vars.panetitle
+
+  if user_title ~= nil and #user_title > 0 then
+    pane_title = user_title
+  end
+
+  return {
+    {Text=" " .. pane_title .. " "},
+  }
+end)
+
 return {
   enable_scroll_bar = true,
-  hide_tab_bar_if_only_one_tab = false,
   exit_behavior = "Close",
+  hide_tab_bar_if_only_one_tab = false,
+  window_decorations = "RESIZE",
 
   audible_bell = "Disabled",
   visual_bell = {

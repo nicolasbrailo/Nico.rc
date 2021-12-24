@@ -49,3 +49,7 @@ function lintandreview() {
     jf submit --draft
   fi
 }
+
+function wezterm_settitle() {
+  echo -e "\x1b]1337;SetUserVar=panetitle=$( echo $@ | base64 )\x07"
+}

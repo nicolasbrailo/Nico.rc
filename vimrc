@@ -122,17 +122,6 @@ let g:ImplSwitcher_searchMaxDirUps = 4
 source ~/.vim/plugins/impl_switcher.vim
 
 " *************** GnuPG Switcher config ***************
-" Add to bashrc if GPG complains " GPG_TTY=`tty`
-" Add to bashrc if GPG complains " export GPG_TTY
-" Still not working? Maybe IDE has no key agent. Try gpg-connect-agent
-let g:GPGPreferArmor=1
-let g:GPGPreferSign=1
-let gpgLvl1 = {'ext': 'secure.pwd', 'key': 'nicolasbrailo+pwd+secure@gmail.com'}
-let gpgLvl2 = {'ext': 'general.pwd', 'key': 'nicolasbrailo+pwd+general@gmail.com'}
-let g:GPGFileDefaults = [gpgLvl1, gpgLvl2]
-"let g:GPGDebugLevel=99999
-"let g:GPGDebugLog='~/gpg.vim.log'
-
 source ~/.vim/plugins/config_gnupg.vim
 source ~/.vim/plugins/gnupg.vim
 

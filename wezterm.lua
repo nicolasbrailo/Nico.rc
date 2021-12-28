@@ -1,10 +1,28 @@
-local wezterm = require 'wezterm';
+local wt = require 'wezterm';
 local DevSrv = "devbig038.cln2.facebook.com"
+
+wt.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+  -- local title = tab.active_pane.user_vars.panetitle
+  local title = "Terminal"
+
+  for i = 1,#panes do
+    local t = panes[i].user_vars.panetitle
+    if t ~= nil and #t > 0 then
+      -- title = t
+    end
+  end
+
+  return {
+    {Text="  " .. title .. "  "},
+  }
+end)
 
 return {
   enable_scroll_bar = true,
-  hide_tab_bar_if_only_one_tab = false,
   exit_behavior = "Close",
+  hide_tab_bar_if_only_one_tab = false,
+  show_tab_index_in_tab_bar = true,
+  window_decorations = "RESIZE",
 
   audible_bell = "Disabled",
   visual_bell = {
@@ -17,28 +35,28 @@ return {
   },
 
   keys = {
-    {key="k", mods="CTRL|CMD", action=wezterm.action{ClearScrollback="ScrollbackAndViewport"}},
+    {key="k", mods="CTRL|CMD", action=wt.action{ClearScrollback="ScrollbackAndViewport"}},
     {key="-", mods="CTRL|CMD", action="DecreaseFontSize"},
     {key="=", mods="CTRL|CMD", action="IncreaseFontSize"},
 
-    {key="s", mods="CTRL|CMD", action=wezterm.action{SplitVertical={domain="CurrentPaneDomain"}}},
-    {key="h", mods="CTRL|CMD", action=wezterm.action{SplitHorizontal={domain="CurrentPaneDomain"}}},
-    {key="t", mods="CTRL|CMD", action=wezterm.action{SpawnTab="CurrentPaneDomain"}},
+    {key="s", mods="CTRL|CMD", action=wt.action{SplitVertical={domain="CurrentPaneDomain"}}},
+    {key="h", mods="CTRL|CMD", action=wt.action{SplitHorizontal={domain="CurrentPaneDomain"}}},
+    {key="t", mods="CTRL|CMD", action=wt.action{SpawnTab="CurrentPaneDomain"}},
 
-    {key="PageUp",   mods="CTRL|CMD", action=wezterm.action{ActivateTabRelative=-1}},
-    {key="PageDown", mods="CTRL|CMD", action=wezterm.action{ActivateTabRelative=1}},
-    {key="PageUp",   mods="CTRL|CMD|SHIFT", action=wezterm.action{MoveTabRelative=-1}},
-    {key="PageDown", mods="CTRL|CMD|SHIFT", action=wezterm.action{MoveTabRelative=1}},
+    {key="PageUp",   mods="CTRL|CMD", action=wt.action{ActivateTabRelative=-1}},
+    {key="PageDown", mods="CTRL|CMD", action=wt.action{ActivateTabRelative=1}},
+    {key="PageUp",   mods="CTRL|CMD|SHIFT", action=wt.action{MoveTabRelative=-1}},
+    {key="PageDown", mods="CTRL|CMD|SHIFT", action=wt.action{MoveTabRelative=1}},
 
-    {key="LeftArrow",  mods="CTRL|CMD", action=wezterm.action{ActivatePaneDirection="Left"}},
-    {key="RightArrow", mods="CTRL|CMD", action=wezterm.action{ActivatePaneDirection="Right"}},
-    {key="UpArrow",    mods="CTRL|CMD", action=wezterm.action{ActivatePaneDirection="Up"}},
-    {key="DownArrow",  mods="CTRL|CMD", action=wezterm.action{ActivatePaneDirection="Down"}},
+    {key="LeftArrow",  mods="CTRL|CMD", action=wt.action{ActivatePaneDirection="Left"}},
+    {key="RightArrow", mods="CTRL|CMD", action=wt.action{ActivatePaneDirection="Right"}},
+    {key="UpArrow",    mods="CTRL|CMD", action=wt.action{ActivatePaneDirection="Up"}},
+    {key="DownArrow",  mods="CTRL|CMD", action=wt.action{ActivatePaneDirection="Down"}},
 
-    {key="LeftArrow",  mods="CTRL|CMD|SHIFT", action=wezterm.action{AdjustPaneSize={"Left", 3}}},
-    {key="RightArrow", mods="CTRL|CMD|SHIFT", action=wezterm.action{AdjustPaneSize={"Right", 3}}},
-    {key="UpArrow",    mods="CTRL|CMD|SHIFT", action=wezterm.action{AdjustPaneSize={"Up", 3}}},
-    {key="DownArrow",  mods="CTRL|CMD|SHIFT", action=wezterm.action{AdjustPaneSize={"Down", 3}}},
+    {key="LeftArrow",  mods="CTRL|CMD|SHIFT", action=wt.action{AdjustPaneSize={"Left", 3}}},
+    {key="RightArrow", mods="CTRL|CMD|SHIFT", action=wt.action{AdjustPaneSize={"Right", 3}}},
+    {key="UpArrow",    mods="CTRL|CMD|SHIFT", action=wt.action{AdjustPaneSize={"Up", 3}}},
+    {key="DownArrow",  mods="CTRL|CMD|SHIFT", action=wt.action{AdjustPaneSize={"Down", 3}}},
 
     -- Disable default bindings so Vim can intercept them instead
     {key="LeftArrow",  mods="CTRL|SHIFT", action="DisableDefaultAssignment"},

@@ -8,7 +8,7 @@
 let g:GPGPreferArmor=1
 let g:GPGPreferSign=0
 let g:GPGPreferSymmetric=1
-
+let g:GPGExecutable='gpg --trust-model always --no-symkey-cache'
 
 
 

@@ -21,7 +21,7 @@
   resize_right = ""
   toggle_zoom = ""
   full_screen = ""
-  reset_clear = <Control>k
+  reset_clear = <Primary><Alt><Super>k
   group_all = ""
   ungroup_all = ""
   group_tab = ""

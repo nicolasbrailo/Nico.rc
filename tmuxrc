@@ -33,7 +33,7 @@ bind -n M-NPage next-window
 bind -n M-PPage previous-window
 bind -n S-M-NPage swap-window -t:+1
 bind -n S-M-PPage swap-window -t:-1
-# bind -n M-R rename-window XXX
+bind -n M-r command-prompt "rename-window '%% '"
 
 # Binding to clear history and scrollback
 bind -n M-k send-keys -R \; clear-history

@@ -24,6 +24,9 @@ return {
   show_tab_index_in_tab_bar = true,
   window_decorations = "RESIZE",
 
+  -- Disable ligatures (rendering != as a single symbol)
+  harfbuzz_features = {"calt=0", "clig=0", "liga=0"},
+
   audible_bell = "Disabled",
   visual_bell = {
     fade_in_duration_ms = 150,

@@ -1,19 +1,43 @@
 [global_config]
-  enabled_plugins = LaunchpadCodeURLHandler, APTURLHandler, LaunchpadBugURLHandler
   suppress_multiple_term_dialog = True
 [keybindings]
-  close_term = <Primary><Shift><Alt>w
-  cycle_next = <Control>Right
-  cycle_prev = <Control>Left
-  go_left = <Shift><Control>Left
-  go_next = <Control><Alt>w
-  go_prev = <Control><Alt>q
-  go_right = <Shift><Control>Right
   new_tab = <Primary>t
-  new_window = <Primary><Shift>t
+  cycle_next = ""
+  cycle_prev = ""
+  go_next = ""
+  go_prev = ""
+  go_up = ""
+  go_down = ""
+  go_left = ""
+  go_right = ""
+  split_horiz = ""
+  split_vert = ""
+  close_term = ""
+  toggle_scrollbar = ""
+  close_window = ""
+  resize_up = ""
+  resize_down = ""
+  resize_left = ""
+  resize_right = ""
+  toggle_zoom = ""
+  full_screen = ""
   reset_clear = <Control>k
-  split_horiz = <Control><Alt>h
-  split_vert = <Control><Alt>v
+  group_all = ""
+  ungroup_all = ""
+  group_tab = ""
+  ungroup_tab = ""
+  new_window = <Primary><Shift>t
+  edit_window_title = ""
+  edit_tab_title = ""
+  edit_terminal_title = ""
+[profiles]
+  [[default]]
+    cursor_color = "#aaaaaa"
+    font = Liberation Mono 14
+    show_titlebar = False
+    scrollback_infinite = True
+    use_system_font = False
+    background_image = None
 [layouts]
   [[default]]
     [[[child1]]]
@@ -24,10 +48,3 @@
       parent = ""
       type = Window
 [plugins]
-[profiles]
-  [[default]]
-    background_image = None
-    font = Inconsolata Medium 18
-    scrollback_infinite = True
-    show_titlebar = False
-    use_system_font = False

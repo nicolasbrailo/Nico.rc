@@ -21,6 +21,10 @@ set relativenumber   " Show numbering relative to cursor
 autocmd BufEnter * set relativenumber   " Don't know why won't work for new bufs
 set scrolloff=4      " Start scrolling the screen 10 lines before end
 
+if has('termguicolors')
+  set termguicolors
+endif
+
 filetype on
 filetype plugin indent on
 
@@ -53,12 +57,6 @@ set noswapfile        " Turn backup off, most stuff is in a repo anyway...
 " *********** Mappings *************
 let mapleader = ","
 let g:mapleader = ","
-
-" Closer pg-up/dn
-imap <C-Up> <PageUp>
-imap <C-Down> <PageDown>
-map <C-Up> <PageUp>
-map <C-Down> <PageDown>
 
 " Alternative <esc> mapping, useful when writing lots of text
 inoremap <leader><leader> <esc>

@@ -30,6 +30,7 @@
   edit_window_title = ""
   edit_tab_title = ""
   edit_terminal_title = ""
+  layout_launcher = ""
 [profiles]
   [[default]]
     cursor_color = "#aaaaaa"

@@ -31,8 +31,9 @@ bind -n M-\- split -v
 bind -n M-t new-window
 bind -n M-NPage next-window
 bind -n M-PPage previous-window
-bind -n S-M-NPage swap-window -t:+1
-bind -n S-M-PPage swap-window -t:-1
+# Window move: S-M seems to trigger a shortcut in Fedora
+bind -n C-M-NPage swap-window -t:+1; next-window
+bind -n C-M-PPage swap-window -t:-1; previous-window
 bind -n M-r command-prompt "rename-window '%% '"
 
 # Binding to clear history and scrollback

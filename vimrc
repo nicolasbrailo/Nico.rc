@@ -1,12 +1,14 @@
 " Note: Check :help CMD for help on each command
 
 " *********** GUIish stuff *************
-colorscheme torte
+if has('termguicolors')
+  set termguicolors
+endif
+
 set guifont=Inconsolata\ Medium\ 14
 set guifont=Menlo-Regular:h14
 syntax on            " Turn on syntax highlighting
 set synmaxcol=200    " Only do syntax highlighting for the first N cols
-set number           " Show line numbers
 " set cursorline      " Highlight current line
 set ttyfast          " Should redraw screen more smoothly
 "set laststatus=2    " Always show a status bar (takes a line)
@@ -17,16 +19,18 @@ set nomousehide      " Some times gvim decides to hide the cursor. Dunno why but
 set mouse=a          " Always use the mouse
 set novisualbell     " Stop ugly screen flashing
 set ruler            " Show current cursor position
-set relativenumber   " Show numbering relative to cursor
-autocmd BufEnter * set relativenumber   " Don't know why won't work for new bufs
+set number
+" set relativenumber   " Show numbering relative to cursor
+autocmd BufEnter * set number " Don't know why won't work for new bufs
 set scrolloff=4      " Start scrolling the screen 10 lines before end
-
-if has('termguicolors')
-  set termguicolors
-endif
 
 filetype on
 filetype plugin indent on
+
+colorscheme torte
+hi TabLine guibg=slategrey guifg=black cterm=bold
+hi TabLineSel guibg=darkslateblue guifg=black cterm=bold
+hi TabLineFill guibg=black guifg=black gui=none
 
 " *********** Text formatting *************
 set wildmode=list:longest,full    " Use tab-completions
@@ -208,5 +212,4 @@ let g:vimwiki_url_maxsave=0
 " HTML not supported with markdown " let nicowiki.auto_export = 1
 " HTML not supported with markdown " let nicowiki.path_html = '~/src/nicowiki/html/'
 let g:vimwiki_list = [nicowiki, fbwiki]
-
 

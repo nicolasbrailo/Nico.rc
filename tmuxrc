@@ -24,8 +24,8 @@ bind -n S-M-Down   resize-pane -D
 bind -n S-M-Left   resize-pane -L
 bind -n S-M-Right  resize-pane -R
 
-bind -n M-\\ split -h
-bind -n M-\- split -v
+bind -n M-\\ split -c "#{pane_current_path}" -h
+bind -n M-\- split -c "#{pane_current_path}" -v
 
 # window management
 bind -n M-t new-window

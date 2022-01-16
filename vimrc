@@ -42,6 +42,9 @@ set expandtab
 set autoindent
 set smartindent
 
+" Show weird chars
+set listchars=tab:➩\ ,extends:›,precedes:‹,nbsp:·,trail:·
+
 " *********** Search & replace *************
 set ignorecase    " case insensitive
 set smartcase     " case insensitive only if there is no uppercase
@@ -97,7 +100,7 @@ map <C-CR> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 
 " *************** Find & grep integration ***************
 " Find and grep integration: use my fastgrep wrapper instead of plain grep
-let g:FG_grepCommand = '~/Nico.rc/fastgrep.sh'
+let g:FG_grepCommand = '~/src/Nico.rc/fastgrep.sh'
 source ~/.vim/plugins/findgrep.vim
 
 " If $VIM_PATH is not empty, adding it to path so that #include searches work

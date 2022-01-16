@@ -1,11 +1,12 @@
-# Disable annoying ubuntu global menu
-## This takes care of the annoying "menu timeout" in gvim when using KDE
-## If using gnome or unity it's probably a good idea to comment this out
-export UBUNTU_MENUPROXY=0
-
 # Access to my fastgrep script from everywhere without adding a new $PATH entry
-alias fastgrep='~/Nico.rc/fastgrep.sh'
-alias gf='~/Nico.rc/fastgrep.sh'
+alias fastgrep='~/src/Nico.rc/fastgrep.sh'
+alias gf='~/src/Nico.rc/fastgrep.sh'
+
+function xdg-what() {
+  xdg-mime query default $(xdg-mime query filetype $@)
+}
+
+alias xo='xdg-open'
 
 GPG_TTY=`tty`
 export GPG_TTY
@@ -48,9 +49,5 @@ function lintandreview() {
   else
     jf submit --draft
   fi
-}
-
-function wezterm_settitle() {
-  echo -e "\x1b]1337;SetUserVar=panetitle=$( echo $@ | base64 )\x07"
 }
 

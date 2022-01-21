@@ -44,6 +44,7 @@ set smartindent
 
 " Show weird chars
 set listchars=tab:➩\ ,extends:›,precedes:‹,nbsp:·,trail:·
+set list
 
 " *********** Search & replace *************
 set ignorecase    " case insensitive

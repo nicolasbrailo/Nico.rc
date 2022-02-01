@@ -155,8 +155,8 @@ function wrapped_grep() {
 # Given a file name, will iterate up the directory tree until
 # the file is found
 function find_file_in_tree() {
-    file=$1
-    dir=`pwd`
+    file="$1"
+    dir=$(pwd)
     while [ ${#dir} -gt 1 ]; do
         if [ -e $dir/$file ]; then
             echo "$dir/$file";
@@ -168,13 +168,13 @@ function find_file_in_tree() {
 
 # Write a new config file
 function rebuild_config() {
-    old_idx_dirs=$1
-    new_idx_dirs=$2
-    old_excl_ptn=$3
-    new_excl_ptn=$4
-    old_incl_ptn=$5
-    new_incl_ptn=$6
-    config_path=$7
+    old_idx_dirs="$1"
+    new_idx_dirs="$2"
+    old_excl_ptn="$3"
+    new_excl_ptn="$4"
+    old_incl_ptn="$5"
+    new_incl_ptn="$6"
+    config_path="$7"
 
     if [ "${#new_idx_dirs}" -eq 0 ]; then
         new_idx_dirs=$old_idx_dirs
@@ -266,7 +266,7 @@ done
 if [ "${#GREPCACHE_FILE}" -lt 2 ]; then
     echo "Cache file $GREPCACHE_BASE_FILE not found. Defaulting to plain grep..." >&2
     echo "  Run $0 -r in the root of the project to enable fastgrep." >&2
-    grep -nri $@
+    grep -nriI "$@"
 else
   wrapped_grep $GREPCACHE_FILE "$@"
 fi

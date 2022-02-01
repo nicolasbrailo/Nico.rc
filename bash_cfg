@@ -6,6 +6,15 @@ function xdg-what() {
   xdg-mime query default $(xdg-mime query filetype $@)
 }
 
+function xdg-handlers-for() {
+  cat /usr/share/applications/mimeinfo.cache | grep "$(xdg-mime query filetype $@)="
+}
+
+function xdg-set-default-for() {
+  echo "NOT IMPL"
+  echo "EG xdg-mime default audacity.desktop audio/x-wav"
+}
+
 alias xo='xdg-open'
 
 GPG_TTY=`tty`
@@ -19,6 +28,9 @@ HISTCONTROL=ignoredups:erasedups
 shopt -s histappend
 #export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 export PROMPT_COMMAND="history -a"
+
+# For some reason, without this $VAR<tab> gets escaped to \$VAR
+shopt -s direxpand
 
 export EDITOR=vim
 

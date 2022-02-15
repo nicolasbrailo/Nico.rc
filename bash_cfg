@@ -15,6 +15,8 @@ function xdg-set-default-for() {
   echo "EG xdg-mime default audacity.desktop audio/x-wav"
 }
 
+alias beep="aplay 2>/dev/null 1>/dev/null ~/src/Nico.rc/beam.wav &"
+
 alias xo='xdg-open'
 
 GPG_TTY=`tty`

@@ -37,6 +37,8 @@
     font = Liberation Mono 14
     show_titlebar = False
     scrollback_infinite = True
+    use_custom_command = True
+    custom_command = tmux
     use_system_font = False
     background_image = None
 [layouts]

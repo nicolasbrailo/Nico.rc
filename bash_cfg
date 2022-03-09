@@ -19,6 +19,13 @@ alias beep="aplay 2>/dev/null 1>/dev/null ~/src/Nico.rc/beam.wav &"
 
 alias xo='xdg-open'
 
+alias gnomerestart='killall -SIGQUIT gnome-shell'
+
+# If there is vim extended, prefer it over vanilla
+if [[ $( which vimx ) ]]; then
+  alias vim=vimx
+fi
+
 GPG_TTY=`tty`
 export GPG_TTY
 
@@ -48,11 +55,26 @@ export PS1='\A \h:\w \$ '
 if [ -z "$THIS_HOST_COLOR" ]; then export THIS_HOST_COLOR=103; fi
 export COLOR_RESET='\[\e[0m\]'
 export COLOR_SET='\[\e['$THIS_HOST_COLOR'm\]'
+export PS1_NL_SEP=''
 if [ -n "$(LC_ALL=C type -t _scm_prompt)" ] && [ "$(LC_ALL=C type -t _scm_prompt)" = function ]; then
-  export PS1='\A '$COLOR_SET'\h'$COLOR_RESET':\w$( _scm_prompt " (%s)") \$ ';
+  export PS1='\A '$COLOR_SET'\h'$COLOR_RESET':\w$( _scm_prompt " (%s)") $PS1_NL_SEP\$ ';
 else
-  export PS1='\A '$COLOR_SET'\h'$COLOR_RESET':\w\$ ';
+  export PS1='\A '$COLOR_SET'\h'$COLOR_RESET':\w$PS1_NL_SEP\$ ';
 fi
+
+function on_bash_resize() {
+  local ps1_len=$(expr length "$PS1")
+  local term_cols=$(tput cols)
+  local cols_after_ps1=$(( $term_cols - $ps1_len ))
+  if [[ $cols_after_ps1 -lt 50 ]]; then
+    export PS1_NL_SEP=$'\n'
+  else
+    export PS1_NL_SEP=''
+  fi
+}
+
+on_bash_resize
+trap on_bash_resize SIGWINCH
 
 # Add custom scripts to path
 if [ -d "$HOME/src/bin" ]; then

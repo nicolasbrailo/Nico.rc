@@ -42,6 +42,8 @@ set expandtab
 set autoindent
 set smartindent
 
+autocmd BufNewFile,BufRead *.c set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
+
 " Show weird chars
 set listchars=tab:➩\ ,extends:›,precedes:‹,nbsp:·,trail:·
 set list

@@ -15,16 +15,42 @@ function xdg-set-default-for() {
   echo "EG xdg-mime default audacity.desktop audio/x-wav"
 }
 
-alias beep="aplay 2>/dev/null 1>/dev/null ~/src/Nico.rc/beam.wav &"
+alias beep="aplay --quiet ~/src/Nico.rc/beam.wav"
 
 alias xo='xdg-open'
 
 alias gnomerestart='killall -SIGQUIT gnome-shell'
 
-# If there is vim extended, prefer it over vanilla
-if [[ $( which vimx ) ]]; then
-  alias vim=vimx
-fi
+function binexists() {
+  local cmd="$1"
+  return $(command -v "$cmd" &>/dev/null)
+}
+
+function tryAlias() {
+  local default="$1"
+  local preferred="$2"
+
+  # in case of an alias with params (eg `alias foo='ls -l'`) we want to check
+  # if binexists `ls`, not 'ls -l'
+  local preferred_bin=$(echo "$preferred" | awk '{print $1;}')
+
+  if binexists "$preferred_bin"; then
+    echo "alias $default=\"$preferred\""
+    eval "alias $default=\"$preferred\""
+
+    # Try adding compgens for the alias
+    _completion_loader "$preferred_bin"
+    $(complete -p "$preferred_bin" | sed -E 's/[[:space:]]+'"$preferred_bin"'/ '"$default"'/g')
+  fi
+}
+
+# Some fancy aliases from https://github.com/ibraheemdev/modern-unix
+tryAlias cat bat
+tryAlias du duf
+#tryAlias grep rg
+tryAlias ls "exa -l"
+tryAlias vim vimx
+
 
 GPG_TTY=`tty`
 export GPG_TTY
@@ -32,7 +58,7 @@ export GPG_TTY
 # Configure history
 export HISTFILESIZE=1000000
 export HISTSIZE=1000000
-export HISTIGNORE='ls:bg:fg:history;cd'
+export HISTIGNORE='ls:bg:fg:history:cd:man:exa:'
 HISTCONTROL=ignoredups:erasedups
 shopt -s histappend
 #export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"

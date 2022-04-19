@@ -35,7 +35,7 @@ function tryAlias() {
   local preferred_bin=$(echo "$preferred" | awk '{print $1;}')
 
   if binexists "$preferred_bin"; then
-    echo "alias $default=\"$preferred\""
+    #echo "alias $default=\"$preferred\""
     eval "alias $default=\"$preferred\""
 
     # Try adding compgens for the alias

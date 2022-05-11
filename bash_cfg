@@ -92,8 +92,8 @@ fi
 
 function on_bash_resize() {
   local min_blank_cols=50
-  local long_ps1_len=$(expr length "$LONG_PS1")
-  local short_ps1_len=$(expr length "$SHORT_PS1")
+  local long_ps1_len=$(echo "${#LONG_PS1}")
+  local short_ps1_len=$(echo "${#SHORT_PS1}")
   local term_cols=$(tput cols)
   local cols_after_long_ps1=$(( $term_cols - $long_ps1_len ))
   local cols_after_short_ps1=$(( $term_cols - $short_ps1_len ))

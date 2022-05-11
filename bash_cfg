@@ -64,9 +64,6 @@ shopt -s histappend
 #export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 export PROMPT_COMMAND="history -a"
 
-# For some reason, without this $VAR<tab> gets escaped to \$VAR
-shopt -s direxpand
-
 export EDITOR=vim
 
 # Make C-w stop on slashes and spaces (instead of space only)

@@ -7,42 +7,6 @@ set-window-option -g xterm-keys on
 # Resize window when terminal size changes, even if coming from smaller client
 set-window-option -g aggressive-resize
 
-# Destroy all keybindings
-#unbind-key -a
-
-# Set prefix key, to ensure some kind of menu is always available
-set-option -g prefix M-b
-bind-key M-b send-prefix
-
-# pane select and resize
-bind -n M-Up    run-shell "if [ $(tmux display-message -p '#{pane_at_top}') -ne 1 ]; then tmux select-pane -U; fi"
-bind -n M-Down  run-shell "if [ $(tmux display-message -p '#{pane_at_bottom}') -ne 1 ] ; then tmux select-pane -D; fi"
-bind -n M-Right run-shell "if [ $(tmux display-message -p '#{pane_at_right}') -ne 1 ]; then tmux select-pane -R; fi"
-bind -n M-Left  run-shell "if [ $(tmux display-message -p '#{pane_at_left}') -ne 1 ]; then tmux select-pane -L; fi"
-#bind -n M-Up    select-pane -U
-#bind -n M-Down  select-pane -D
-#bind -n M-Left  select-pane -L
-#bind -n M-Right select-pane -R
-bind -n S-M-Up     resize-pane -U
-bind -n S-M-Down   resize-pane -D
-bind -n S-M-Left   resize-pane -L
-bind -n S-M-Right  resize-pane -R
-
-bind -n M-\\ split -c "#{pane_current_path}" -h
-bind -n M-\- split -c "#{pane_current_path}" -v
-
-# window management
-bind -n M-t new-window
-bind -n M-NPage next-window
-bind -n M-PPage previous-window
-# Window move: S-M seems to trigger a shortcut in Fedora
-bind -n C-M-NPage swap-window -t +1\; select-window -t +1
-bind -n C-M-PPage swap-window -t -1\; select-window -t -1
-bind -n M-r command-prompt "rename-window '%% '"
-
-# Binding to clear history and scrollback
-bind -n M-k send-keys -R \; clear-history
-
 # Enable mouse; pane-scrolling, window resize, etc
 set -g mouse on
 
@@ -79,3 +43,43 @@ set -g visual-silence off
 # Highlight a window with activity
 setw -g monitor-activity on
 
+
+
+
+## Experiment on default keybindings
+##  # Destroy all keybindings
+##  #unbind-key -a
+##  
+##  # Set prefix key, to ensure some kind of menu is always available
+##  set-option -g prefix M-b
+##  bind-key M-b send-prefix
+##  
+##  # pane select and resize
+##  bind -n M-Up    run-shell "if [ $(tmux display-message -p '#{pane_at_top}') -ne 1 ]; then tmux select-pane -U; fi"
+##  bind -n M-Down  run-shell "if [ $(tmux display-message -p '#{pane_at_bottom}') -ne 1 ] ; then tmux select-pane -D; fi"
+##  bind -n M-Right run-shell "if [ $(tmux display-message -p '#{pane_at_right}') -ne 1 ]; then tmux select-pane -R; fi"
+##  bind -n M-Left  run-shell "if [ $(tmux display-message -p '#{pane_at_left}') -ne 1 ]; then tmux select-pane -L; fi"
+##  #bind -n M-Up    select-pane -U
+##  #bind -n M-Down  select-pane -D
+##  #bind -n M-Left  select-pane -L
+##  #bind -n M-Right select-pane -R
+##  bind -n S-M-Up     resize-pane -U
+##  bind -n S-M-Down   resize-pane -D
+##  bind -n S-M-Left   resize-pane -L
+##  bind -n S-M-Right  resize-pane -R
+##  
+##  bind -n M-\\ split -c "#{pane_current_path}" -h
+##  bind -n M-\- split -c "#{pane_current_path}" -v
+##  
+##  # window management
+##  bind -n M-t new-window
+##  bind -n M-NPage next-window
+##  bind -n M-PPage previous-window
+##  # Window move: S-M seems to trigger a shortcut in Fedora
+##  bind -n C-M-NPage swap-window -t +1\; select-window -t +1
+##  bind -n C-M-PPage swap-window -t -1\; select-window -t -1
+##  bind -n M-r command-prompt "rename-window '%% '"
+##  
+##  # Binding to clear history and scrollback
+##  bind -n M-k send-keys -R \; clear-history
+##  

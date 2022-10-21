@@ -2,6 +2,10 @@
 set -g history-limit 500000
 set -s escape-time 0
 
+# When moving to a new pane, move one at a time and stop movement. Without this
+# option any subsequent arrow keys will continue moving
+set repeat-time 0
+
 set-window-option -g xterm-keys on
 
 # Resize window when terminal size changes, even if coming from smaller client

@@ -79,13 +79,12 @@ if [ -z "$THIS_HOST_COLOR" ]; then export THIS_HOST_COLOR=103; fi
 export COLOR_RESET='\[\e[0m\]'
 export COLOR_SET='\[\e['$THIS_HOST_COLOR'm\]'
 export PS1_NL_SEP=''
+export LONG_PS1='\A '$COLOR_SET'\h'$COLOR_RESET':\w$PS1_NL_SEP\$ ';
+export SHORT_PS1='\A \w$PS1_NL_SEP\$ ';
 if [ -n "$(LC_ALL=C type -t _scm_prompt)" ] && [ "$(LC_ALL=C type -t _scm_prompt)" = function ]; then
   export PS1='\A '$COLOR_SET'\h'$COLOR_RESET':\w$( _scm_prompt " (%s)") $PS1_NL_SEP\$ ';
-else
-  export LONG_PS1='\A '$COLOR_SET'\h'$COLOR_RESET':\w$PS1_NL_SEP\$ ';
-  export SHORT_PS1='\A \w$PS1_NL_SEP\$ ';
-  export PS1=$LONG_PS1
 fi
+export PS1=$LONG_PS1
 
 function on_bash_resize() {
   local min_blank_cols=50

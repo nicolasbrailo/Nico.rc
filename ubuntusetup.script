@@ -1,0 +1,80 @@
+#!/usr/bin/bash
+
+set -euo pipefail
+
+echo "This script may be dangerous, you should run it step by step / copypasting commands"
+exit 0
+
+sudo apt-get update
+sudo apt-get upgrade
+
+sudo apt-get install vim vim-gtk git terminator tmux firefox vlc
+snap install spotify
+
+# Remap capslock esc
+sudo apt-get install gnome-tweaks
+
+# Gnome top-panel tweaks
+sudo apt install gnome-shell-extension-manager chrome-gnome-shell
+
+# Cleanup
+rm -rf Documents/ Music/ Pictures/ Public/ Templates/ Videos/
+
+## Git global defaults
+git config --global user.email "nicolasbrailo@gmail.com"
+git config --global user.name "Nico B"
+
+
+## Gen an ssh key for github
+if [[ ! -f "/home/$USER/.ssh/id_rsa" ]]; then
+  echo "No ssh key detected, generating one..."
+  ssh-keygen
+  cat "/home/$USER/.ssh/id_rsa.pub"
+  echo "Paste key here: https://github.com/settings/ssh/new"
+  echo "Enter to continue"
+  read
+fi
+
+
+## Clone Nico.rc and setup links
+SRC_ROOT="/home/$USER/src"
+mkdir -p "$SRC_ROOT"
+pushd "$SRC_ROOT"
+git clone --recurse-submodules git@github.com:nicolasbrailo/Nico.rc.git
+ln -s "$SRC_ROOT/Nico.rc/vimrc" "/home/$USER/.vimrc"
+ln -s "$SRC_ROOT/Nico.rc/vim" "/home/$USER/.vim"
+mkdir -p ~/.config/terminator
+ln -s "$SRC_ROOT/Nico.rc/terminator/config" "/home/$USER/.config/terminator/config"
+ln -s "$SRC_ROOT/Nico.rc/easystroke" "/home/$USER/.easystroke"
+ln -s "$SRC_ROOT/Nico.rc/tmuxrc" "/home/$USER/.tmux.conf"
+ln -s "$SRC_ROOT/Nico.rc/inputrc" "/home/$USER/.inputrc"
+
+echo "[ -f '/home/$USER/src/Nico.rc/bash_cfg' ] && source '/home/$USER/src/Nico.rc/bash_cfg'" >> "/home/$USER/.bashrc"
+echo "[ -f '/home/$USER/src/Nico.rc/bash_linuxonly.cfg' ] && source '/home/$USER/src/Nico.rc/bash_linuxonly.cfg'" >> "/home/$USER/.bashrc"
+
+popd
+
+
+## Firefox -> remove tab bar
+FFX_PROFILE_BASE="/home/$USER/snap/firefox/common/.mozilla/firefox"
+FFX_PROFILE=$( find "$FFX_PROFILE_BASE" -maxdepth 1 -type d -name '*default' )
+FFX_NO_TAB_BAR=$(cat <<EOF
+#TabsToolbar { visibility: collapse; }
+#titlebar { visibility: collapse; }
+#sidebar-header { visibility: collapse !important; }EOF
+)
+
+if [[ $( echo "$FFX_PROFILE" | wc -l ) -eq 1 && ! -z "$FFX_PROFILE" ]]; then
+  echo "Firefox profiles lives @ $FFX_PROFILE"
+  mkdir -p "$FFX_PROFILE/chrome"
+  if [[ ! -f "$FFX_PROFILE/chrome/userChrome.css" ]]; then
+    echo "$FFX_NO_TAB_BAR" > "$FFX_PROFILE/chrome/userChrome.css" 
+    echo "Created $FFX_PROFILE/chrome/userChrome.css" 
+    echo "Remember to set 'toolkit.legacyUserProfileCustomizations' in about:config"
+  else
+    echo "Already exists: $FFX_PROFILE/chrome/userChrome.css" 
+  fi
+else
+  echo "Can't find Firefox profile @ $FFX_PROFILE_BASE"
+fi
+

@@ -8,7 +8,7 @@ exit 0
 sudo apt-get update
 sudo apt-get upgrade
 
-sudo apt-get install vim vim-gtk git terminator tmux firefox vlc
+sudo apt-get install vim vim-gtk git terminator tmux firefox vlc build-essential net-tools iputils-ping
 snap install spotify
 
 # Remap capslock esc

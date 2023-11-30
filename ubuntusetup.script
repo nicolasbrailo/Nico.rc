@@ -8,7 +8,7 @@ exit 0
 sudo apt-get update
 sudo apt-get upgrade
 
-sudo apt-get install vim vim-gtk git terminator tmux firefox vlc build-essential net-tools iputils-ping
+sudo apt-get install vim git terminator tmux firefox vlc build-essential net-tools iputils-ping
 snap install spotify
 
 # Remap capslock esc
@@ -61,7 +61,8 @@ FFX_PROFILE=$( find "$FFX_PROFILE_BASE" -maxdepth 1 -type d -name '*default' )
 FFX_NO_TAB_BAR=$(cat <<EOF
 #TabsToolbar { visibility: collapse; }
 #titlebar { visibility: collapse; }
-#sidebar-header { visibility: collapse !important; }EOF
+#sidebar-header { visibility: collapse !important; }
+EOF
 )
 
 if [[ $( echo "$FFX_PROFILE" | wc -l ) -eq 1 && ! -z "$FFX_PROFILE" ]]; then

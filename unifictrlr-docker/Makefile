@@ -6,7 +6,7 @@ ctrlrcfg:
 ctrlrlogs:
 	mkdir -p "$(THIS_PATH)/$@"
 
-.PHONY: coldstart start stop sh rmcontainer build ls clean nuke
+.PHONY: coldstart start stop sh rmcontainer build ls clean nuke installsystemdeps
 
 # This mode will start the container sharing the host's network (no isolation)
 # It should be more portable (no need to override Unifi settings) but has no isolation
@@ -18,6 +18,7 @@ coldstart: ctrlrcfg ctrlrlogs rmcontainer
 	                --mount type=bind,source="$(THIS_PATH)/ctrlrcfg",target=/var/lib/unifi \
 	                --mount type=bind,source="$(THIS_PATH)/ctrlrlogs",target=/var/log/unifi \
 	                --network host \
+	                --restart always \
 	                unifictrl_img
 
 # This start mode will isolate the container's network, but requires overriding
@@ -36,6 +37,7 @@ coldstart_netisolation: ctrlrcfg ctrlrlogs rmcontainer
 	                --publish 8080:8080 \
 	                --publish 8843:8843 \
 	                --publish 8880:8880 \
+	                --restart always \
 	                unifictrl_img
 
 start:
@@ -62,6 +64,9 @@ clean:
 	sudo docker container prune
 	sudo docker images prune -a
 
-nuke: clean
+nuke: stop clean
 	sudo docker images | grep -v ubuntu | tail -n+2 | awk '{print $3}' | xargs sudo docker image rm
+
+installsystemdeps:
+	sudo apt-get install docker.io
 

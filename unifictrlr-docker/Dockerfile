@@ -14,13 +14,15 @@ RUN apt-get update && \
         apt-get install -y wget binutils gnupg2 ca-certificates apt-transport-https net-tools iputils-ping
 
 # Prepare apt
+RUN wget -qO - https://www.mongodb.org/static/pgp/server-3.4.asc | apt-key add -
 RUN wget -qO - https://www.mongodb.org/static/pgp/server-3.6.asc | apt-key add -
-RUN echo "deb https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/3.6 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.6.list
-RUN echo 'deb [ arch=amd64 ] https://www.ui.com/downloads/unifi/debian stable ubiquiti' | tee /etc/apt/sources.list.d/100-ubnt-unifi.list
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 06E85760C0A52C50
+RUN echo "deb [trusted=yes] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/3.6 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.6.list
+RUN echo 'deb [arch=amd64 trusted=yes] https://www.ui.com/downloads/unifi/debian stable ubiquiti' | tee /etc/apt/sources.list.d/100-ubnt-unifi.list
+# Keys are expired, yay unifi and ancient mongo
+#RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 06E85760C0A52C50
 
 # Install unify
-RUN apt-get update && apt-get install unifi -y
+RUN apt-get --allow-unauthenticated update && apt-get --allow-unauthenticated install unifi -y
 
 # Run settings
 WORKDIR /usr/lib/unifi

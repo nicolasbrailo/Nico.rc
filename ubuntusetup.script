@@ -5,10 +5,21 @@ set -euo pipefail
 echo "This script may be dangerous, you should run it step by step / copypasting commands"
 exit 0
 
+# Needed to bootstrap minimal installs
+su - apt-get install sudo
+usermod  -a -G sudo BATMAN
+# Uncomment line to enable group sudo (or add user to sudoers)
+vim /etc/sudoers
+
 sudo apt-get update
 sudo apt-get upgrade
+sudo apt-get -y install vim git terminator tmux build-essential net-tools iputils-ping
+sudo apt-get -y remove nano
+export EDITOR=vim
+echo "export EDITOR=vim" >> "/home/$USER/.bashrc"
+sudo 'echo "export EDITOR=vim" >> "/home/$USER/.bashrc"'
 
-sudo apt-get install vim git terminator tmux firefox vlc build-essential net-tools iputils-ping
+sudo apt-get install firefox vlc
 snap install spotify
 
 # Remap capslock esc

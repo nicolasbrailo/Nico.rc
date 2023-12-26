@@ -40,7 +40,8 @@ set shiftwidth=2
 set softtabstop=2
 set expandtab
 set autoindent
-set smartindent
+set nosmartindent
+set autoindent
 
 autocmd BufNewFile,BufRead *.c set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 

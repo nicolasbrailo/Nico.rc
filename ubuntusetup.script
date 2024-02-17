@@ -23,7 +23,7 @@ fi
 # Continue with installation for normal (not minimal) systems
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get -y install vim git terminator tmux build-essential net-tools iputils-ping
+sudo apt-get -y install vim git terminator tmux build-essential net-tools iputils-ping curl
 sudo apt-get -y remove nano
 export EDITOR=vim
 echo "export EDITOR=vim" >> "/home/$USER/.bashrc"
@@ -70,6 +70,7 @@ ln -s "$SRC_ROOT/Nico.rc/easystroke" "/home/$USER/.easystroke"
 ln -s "$SRC_ROOT/Nico.rc/tmuxrc" "/home/$USER/.tmux.conf"
 ln -s "$SRC_ROOT/Nico.rc/inputrc" "/home/$USER/.inputrc"
 
+echo "export THIS_HOST_COLOR=91" >> "/home/$USER/.bashrc"
 echo "[ -f '/home/$USER/src/Nico.rc/bash_cfg' ] && source '/home/$USER/src/Nico.rc/bash_cfg'" >> "/home/$USER/.bashrc"
 echo "[ -f '/home/$USER/src/Nico.rc/bash_linuxonly.cfg' ] && source '/home/$USER/src/Nico.rc/bash_linuxonly.cfg'" >> "/home/$USER/.bashrc"
 
@@ -78,7 +79,11 @@ popd
 
 ## Firefox -> remove tab bar
 FFX_PROFILE_BASE="/home/$USER/snap/firefox/common/.mozilla/firefox"
-FFX_PROFILE=$( find "$FFX_PROFILE_BASE" -maxdepth 1 -type d -name '*default' )
+if [ ! -d "$FFX_PROFILE_BASE" ]; then
+  FFX_PROFILE_BASE="/home/$USER/.mozilla/firefox"
+fi
+
+FFX_PROFILE=$( find "$FFX_PROFILE_BASE" -maxdepth 1 -type d -name '*default*' )
 FFX_NO_TAB_BAR=$(cat <<EOF
 #TabsToolbar { visibility: collapse; }
 #titlebar { visibility: collapse; }
@@ -86,17 +91,24 @@ FFX_NO_TAB_BAR=$(cat <<EOF
 EOF
 )
 
-if [[ $( echo "$FFX_PROFILE" | wc -l ) -eq 1 && ! -z "$FFX_PROFILE" ]]; then
-  echo "Firefox profiles lives @ $FFX_PROFILE"
-  mkdir -p "$FFX_PROFILE/chrome"
-  if [[ ! -f "$FFX_PROFILE/chrome/userChrome.css" ]]; then
-    echo "$FFX_NO_TAB_BAR" > "$FFX_PROFILE/chrome/userChrome.css" 
-    echo "Created $FFX_PROFILE/chrome/userChrome.css" 
-    echo "Remember to set 'toolkit.legacyUserProfileCustomizations' in about:config"
-  else
-    echo "Already exists: $FFX_PROFILE/chrome/userChrome.css" 
-  fi
+if [[ $( echo "$FFX_PROFILE" | wc -l ) -gt 0 && ! -z "$FFX_PROFILE" ]]; then
+  for profile in $FFX_PROFILE; do
+    echo "Firefox profiles lives @ $profile"
+    mkdir -p "$profile/chrome"
+    if [[ ! -f "$profile/chrome/userChrome.css" ]]; then
+      echo "$FFX_NO_TAB_BAR" > "$profile/chrome/userChrome.css" 
+      echo "Created $profile/chrome/userChrome.css" 
+      echo "Remember to set 'toolkit.legacyUserProfileCustomizations' in about:config"
+    else
+      echo "Already exists: $profile/chrome/userChrome.css" 
+    fi
+  done
 else
   echo "Can't find Firefox profile @ $FFX_PROFILE_BASE"
 fi
 
+
+## Misc
+echo "Spotify @ https://www.spotify.com/uk/download/linux/"
+echo sudo apt-get install chromium
+echo [Will require logout] sudo apt-get install gnome-shell-extension-dashtodock gnome-shell-extension-dash-to-panel

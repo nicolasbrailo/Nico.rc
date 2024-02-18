@@ -1,5 +1,6 @@
 THIS_PATH:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 USER_ID:=$(shell id -u)
+UNIFI_IMG_NAME=unifictrl_img_24feb
 
 ctrlrcfg:
 	mkdir -p "$(THIS_PATH)/$@"
@@ -19,7 +20,7 @@ coldstart: ctrlrcfg ctrlrlogs rmcontainer
 	                --mount type=bind,source="$(THIS_PATH)/ctrlrlogs",target=/var/log/unifi \
 	                --network host \
 	                --restart always \
-	                unifictrl_img
+	                $(UNIFI_IMG_NAME)
 
 # This start mode will isolate the container's network, but requires overriding
 # the 'inform address' (the address unifi devices connect to when adopting)
@@ -38,7 +39,7 @@ coldstart_netisolation: ctrlrcfg ctrlrlogs rmcontainer
 	                --publish 8843:8843 \
 	                --publish 8880:8880 \
 	                --restart always \
-	                unifictrl_img
+	                $(UNIFI_IMG_NAME)
 
 start:
 	sudo docker start unifictrl
@@ -53,7 +54,10 @@ rmcontainer: stop
 	sudo docker container rm unifictrl || true
 
 build:
-	sudo docker build --tag unifictrl_img .
+	sudo docker build --tag $(UNIFI_IMG_NAME) .
+
+build_update_img:
+	sudo docker build --no-cache --tag $(UNIFI_IMG_NAME) .
 
 ls:
 	sudo docker images

@@ -23,14 +23,13 @@ fi
 # Continue with installation for normal (not minimal) systems
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get -y install vim git terminator tmux build-essential net-tools iputils-ping curl
+sudo apt-get -y install vim git terminator tmux build-essential net-tools iputils-ping curl wget
 sudo apt-get -y remove nano
 export EDITOR=vim
 echo "export EDITOR=vim" >> "/home/$USER/.bashrc"
 sudo 'echo "export EDITOR=vim" >> "/home/$USER/.bashrc"'
 
 sudo apt-get install firefox vlc
-snap install spotify
 
 # Remap capslock esc
 sudo apt-get install gnome-tweaks
@@ -77,6 +76,16 @@ echo "[ -f '/home/$USER/src/Nico.rc/bash_linuxonly.cfg' ] && source '/home/$USER
 popd
 
 
+INSTALL_APT_FFX=$(true)
+if $INSTALL_APT_FFX; then
+  echo "Install Firefox from apt repo"
+  sudo install -d -m 0755 /etc/apt/keyrings
+  wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- | sudo tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null
+  gpg -n -q --import --import-options import-show /etc/apt/keyrings/packages.mozilla.org.asc | awk '/pub/{getline; gsub(/^ +| +$/,""); print "\n"$0"\n"}'
+  echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | sudo tee -a /etc/apt/sources.list.d/mozilla.list > /dev/null
+  sudo apt-get update && sudo apt-get install -y firefox-beta
+fi
+
 ## Firefox -> remove tab bar
 FFX_PROFILE_BASE="/home/$USER/snap/firefox/common/.mozilla/firefox"
 if [ ! -d "$FFX_PROFILE_BASE" ]; then
@@ -112,3 +121,4 @@ fi
 echo "Spotify @ https://www.spotify.com/uk/download/linux/"
 echo sudo apt-get install chromium
 echo [Will require logout] sudo apt-get install gnome-shell-extension-dashtodock gnome-shell-extension-dash-to-panel
+

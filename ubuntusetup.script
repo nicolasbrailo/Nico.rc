@@ -72,6 +72,7 @@ ln -s "$SRC_ROOT/Nico.rc/inputrc" "/home/$USER/.inputrc"
 echo "export THIS_HOST_COLOR=91" >> "/home/$USER/.bashrc"
 echo "[ -f '/home/$USER/src/Nico.rc/bash_cfg' ] && source '/home/$USER/src/Nico.rc/bash_cfg'" >> "/home/$USER/.bashrc"
 echo "[ -f '/home/$USER/src/Nico.rc/bash_linuxonly.cfg' ] && source '/home/$USER/src/Nico.rc/bash_linuxonly.cfg'" >> "/home/$USER/.bashrc"
+echo "[ -f '/home/$USER/src/Nico.rc/goto.sh' ] && source '/home/$USER/src/Nico.rc/goto.sh'" >> "/home/$USER/.bashrc"
 
 popd
 

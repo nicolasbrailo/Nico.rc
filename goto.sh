@@ -2,7 +2,7 @@
 
 # jump to bookmark from anywhere in bash. 
 
-GOTO_BOOKMARK_SRC="$HOME/goto"
+export GOTO_BOOKMARK_SRC="$HOME/goto"
 
 function goto() {
   linkname="$1"

@@ -61,21 +61,25 @@ SRC_ROOT="/home/$USER/src"
 mkdir -p "$SRC_ROOT"
 pushd "$SRC_ROOT"
 git clone --recurse-submodules git@github.com:nicolasbrailo/Nico.rc.git
+popd
 ln -s "$SRC_ROOT/Nico.rc/vimrc" "/home/$USER/.vimrc"
 ln -s "$SRC_ROOT/Nico.rc/vim" "/home/$USER/.vim"
-mkdir -p ~/.config/terminator
+mkdir -p "/home/$USER/.config/terminator"
 ln -s "$SRC_ROOT/Nico.rc/terminator/config" "/home/$USER/.config/terminator/config"
 ln -s "$SRC_ROOT/Nico.rc/easystroke" "/home/$USER/.easystroke"
 ln -s "$SRC_ROOT/Nico.rc/tmuxrc" "/home/$USER/.tmux.conf"
 ln -s "$SRC_ROOT/Nico.rc/inputrc" "/home/$USER/.inputrc"
 
-echo "export THIS_HOST_COLOR=91" >> "/home/$USER/.bashrc"
-echo "[ -f '/home/$USER/src/Nico.rc/bash_cfg' ] && source '/home/$USER/src/Nico.rc/bash_cfg'" >> "/home/$USER/.bashrc"
-echo "[ -f '/home/$USER/src/Nico.rc/bash_linuxonly.cfg' ] && source '/home/$USER/src/Nico.rc/bash_linuxonly.cfg'" >> "/home/$USER/.bashrc"
-echo "[ -f '/home/$USER/src/Nico.rc/goto.sh' ] && source '/home/$USER/src/Nico.rc/goto.sh'" >> "/home/$USER/.bashrc"
-
-popd
-
+BASH_EXTRAS=$(cat <<EOF
+export THIS_HOST_COLOR=91
+[ -f '/home/batman/src/Nico.rc/bash/base.sh' ] && source '/home/batman/src/Nico.rc/bash/base.sh'
+[ -f '/home/batman/src/Nico.rc/bash/ps1.sh' ] && source '/home/batman/src/Nico.rc/bash/ps1.sh'
+[ -f '/home/batman/src/Nico.rc/bash/linux.sh' ] && source '/home/batman/src/Nico.rc/bash/linux.sh'
+[ -f '/home/batman/src/Nico.rc/bash/goto.sh' ] && source '/home/batman/src/Nico.rc/bash/goto.sh'
+[ -f '/home/batman/src/Nico.rc/bash/android.sh' ] && source '/home/batman/src/Nico.rc/bash/android.sh'
+EOF
+)
+echo "$BASH_EXTRAS" >> "/home/$USER/.bashrc"
 
 INSTALL_APT_FFX=$(true)
 if $INSTALL_APT_FFX; then
@@ -118,6 +122,8 @@ else
 fi
 
 
+# Extra tools, replacement for std utils. Automatically aliased if avaialble by custom bashrc.
+sudo apt-get install bat duf ripgrep exa
 ## Misc
 echo "Spotify @ https://www.spotify.com/uk/download/linux/"
 echo sudo apt-get install chromium

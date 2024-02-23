@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# jump to bookmark from anywhere in bash. 
+# jump to bookmark from anywhere in bash.
 
 export GOTO_BOOKMARK_SRC="$HOME/goto"
 

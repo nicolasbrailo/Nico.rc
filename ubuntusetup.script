@@ -91,36 +91,7 @@ if $INSTALL_APT_FFX; then
   sudo apt-get update && sudo apt-get install -y firefox-beta
 fi
 
-## Firefox -> remove tab bar
-FFX_PROFILE_BASE="/home/$USER/snap/firefox/common/.mozilla/firefox"
-if [ ! -d "$FFX_PROFILE_BASE" ]; then
-  FFX_PROFILE_BASE="/home/$USER/.mozilla/firefox"
-fi
-
-FFX_PROFILE=$( find "$FFX_PROFILE_BASE" -maxdepth 1 -type d -name '*default*' )
-FFX_NO_TAB_BAR=$(cat <<EOF
-#TabsToolbar { visibility: collapse; }
-#titlebar { visibility: collapse; }
-#sidebar-header { visibility: collapse !important; }
-EOF
-)
-
-if [[ $( echo "$FFX_PROFILE" | wc -l ) -gt 0 && ! -z "$FFX_PROFILE" ]]; then
-  for profile in $FFX_PROFILE; do
-    echo "Firefox profiles lives @ $profile"
-    mkdir -p "$profile/chrome"
-    if [[ ! -f "$profile/chrome/userChrome.css" ]]; then
-      echo "$FFX_NO_TAB_BAR" > "$profile/chrome/userChrome.css" 
-      echo "Created $profile/chrome/userChrome.css" 
-      echo "Remember to set 'toolkit.legacyUserProfileCustomizations' in about:config"
-    else
-      echo "Already exists: $profile/chrome/userChrome.css" 
-    fi
-  done
-else
-  echo "Can't find Firefox profile @ $FFX_PROFILE_BASE"
-fi
-
+./firefox/provisionOrRefreshCfg.sh
 
 # Extra tools, replacement for std utils. Automatically aliased if avaialble by custom bashrc.
 sudo apt-get install bat duf ripgrep exa

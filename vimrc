@@ -3,10 +3,14 @@
 " *********** GUIish stuff *************
 if has('termguicolors')
   set termguicolors
+  if $TERM == 'screen'
+    " https://stackoverflow.com/questions/62702766/termguicolors-in-vim-makes-everything-black-and-white
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  endif
 endif
 
 set guifont=Inconsolata\ Medium\ 14
-set guifont=Menlo-Regular:h14
 syntax on            " Turn on syntax highlighting
 set synmaxcol=200    " Only do syntax highlighting for the first N cols
 " set cursorline      " Highlight current line
@@ -40,8 +44,8 @@ set shiftwidth=2
 set softtabstop=2
 set expandtab
 set autoindent
-set nosmartindent
-set autoindent
+"set nosmartindent
+"set autoindent
 
 autocmd BufNewFile,BufRead *.c set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 
@@ -116,8 +120,6 @@ source ~/.vim/plugins/findgrep.vim
 if !empty($VIM_PATH)
   set path+=$VIM_PATH
 endif
-
-set path+=~/fbsource/fbcode/,~/fbsource/arvr/libraries/audio/fbaudio/
 
 " *************** Tagbar config ***************
 let tagbar_compact=1    " Don't waste screen with tips and blank lines
@@ -219,4 +221,9 @@ let g:vimwiki_url_maxsave=0
 " HTML not supported with markdown " let nicowiki.auto_export = 1
 " HTML not supported with markdown " let nicowiki.path_html = '~/src/nicowiki/html/'
 let g:vimwiki_list = [nicowiki, fbwiki]
+
+let localCfg = expand("~/.vimlocal.vim")
+if filereadable(localCfg)
+  exec "source " . localCfg
+endif
 

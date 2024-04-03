@@ -4,7 +4,7 @@ set -s escape-time 0
 
 # When moving to a new pane, move one at a time and stop movement. Without this
 # option any subsequent arrow keys will continue moving
-set repeat-time 0
+set -g repeat-time 0
 
 set-window-option -g xterm-keys on
 
@@ -81,3 +81,7 @@ bind-key -T copy-mode-vi v send -X begin-selection
 bind-key -T copy-mode-vi V send -X select-line
 bind-key -T copy-mode-vi y send -X copy-pipe-and-cancel 'xclip -in -selection clipboard'
 
+# Set new panes to open in current directory
+bind c new-window -c "#{pane_current_path}"
+bind '"' split-window -c "#{pane_current_path}"
+bind % split-window -h -c "#{pane_current_path}"

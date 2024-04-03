@@ -23,14 +23,13 @@ fi
 # Continue with installation for normal (not minimal) systems
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get -y install vim git terminator tmux build-essential net-tools iputils-ping
+sudo apt-get -y install vim git terminator tmux build-essential net-tools iputils-ping curl wget htop
 sudo apt-get -y remove nano
 export EDITOR=vim
 echo "export EDITOR=vim" >> "/home/$USER/.bashrc"
 sudo 'echo "export EDITOR=vim" >> "/home/$USER/.bashrc"'
 
 sudo apt-get install firefox vlc
-snap install spotify
 
 # Remap capslock esc
 sudo apt-get install gnome-tweaks
@@ -62,41 +61,42 @@ SRC_ROOT="/home/$USER/src"
 mkdir -p "$SRC_ROOT"
 pushd "$SRC_ROOT"
 git clone --recurse-submodules git@github.com:nicolasbrailo/Nico.rc.git
+popd
 ln -s "$SRC_ROOT/Nico.rc/vimrc" "/home/$USER/.vimrc"
 ln -s "$SRC_ROOT/Nico.rc/vim" "/home/$USER/.vim"
-mkdir -p ~/.config/terminator
+mkdir -p "/home/$USER/.config/terminator"
 ln -s "$SRC_ROOT/Nico.rc/terminator/config" "/home/$USER/.config/terminator/config"
 ln -s "$SRC_ROOT/Nico.rc/easystroke" "/home/$USER/.easystroke"
 ln -s "$SRC_ROOT/Nico.rc/tmuxrc" "/home/$USER/.tmux.conf"
 ln -s "$SRC_ROOT/Nico.rc/inputrc" "/home/$USER/.inputrc"
 
-echo "[ -f '/home/$USER/src/Nico.rc/bash_cfg' ] && source '/home/$USER/src/Nico.rc/bash_cfg'" >> "/home/$USER/.bashrc"
-echo "[ -f '/home/$USER/src/Nico.rc/bash_linuxonly.cfg' ] && source '/home/$USER/src/Nico.rc/bash_linuxonly.cfg'" >> "/home/$USER/.bashrc"
-
-popd
-
-
-## Firefox -> remove tab bar
-FFX_PROFILE_BASE="/home/$USER/snap/firefox/common/.mozilla/firefox"
-FFX_PROFILE=$( find "$FFX_PROFILE_BASE" -maxdepth 1 -type d -name '*default' )
-FFX_NO_TAB_BAR=$(cat <<EOF
-#TabsToolbar { visibility: collapse; }
-#titlebar { visibility: collapse; }
-#sidebar-header { visibility: collapse !important; }
+BASH_EXTRAS=$(cat <<EOF
+export THIS_HOST_COLOR=91
+[ -f '/home/batman/src/Nico.rc/bash/base.sh' ] && source '/home/batman/src/Nico.rc/bash/base.sh'
+[ -f '/home/batman/src/Nico.rc/bash/ps1.sh' ] && source '/home/batman/src/Nico.rc/bash/ps1.sh'
+[ -f '/home/batman/src/Nico.rc/bash/linux.sh' ] && source '/home/batman/src/Nico.rc/bash/linux.sh'
+[ -f '/home/batman/src/Nico.rc/bash/goto.sh' ] && source '/home/batman/src/Nico.rc/bash/goto.sh'
+[ -f '/home/batman/src/Nico.rc/bash/android.sh' ] && source '/home/batman/src/Nico.rc/bash/android.sh'
 EOF
 )
+echo "$BASH_EXTRAS" >> "/home/$USER/.bashrc"
 
-if [[ $( echo "$FFX_PROFILE" | wc -l ) -eq 1 && ! -z "$FFX_PROFILE" ]]; then
-  echo "Firefox profiles lives @ $FFX_PROFILE"
-  mkdir -p "$FFX_PROFILE/chrome"
-  if [[ ! -f "$FFX_PROFILE/chrome/userChrome.css" ]]; then
-    echo "$FFX_NO_TAB_BAR" > "$FFX_PROFILE/chrome/userChrome.css" 
-    echo "Created $FFX_PROFILE/chrome/userChrome.css" 
-    echo "Remember to set 'toolkit.legacyUserProfileCustomizations' in about:config"
-  else
-    echo "Already exists: $FFX_PROFILE/chrome/userChrome.css" 
-  fi
-else
-  echo "Can't find Firefox profile @ $FFX_PROFILE_BASE"
+INSTALL_APT_FFX=$(true)
+if $INSTALL_APT_FFX; then
+  echo "Install Firefox from apt repo"
+  sudo install -d -m 0755 /etc/apt/keyrings
+  wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- | sudo tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null
+  gpg -n -q --import --import-options import-show /etc/apt/keyrings/packages.mozilla.org.asc | awk '/pub/{getline; gsub(/^ +| +$/,""); print "\n"$0"\n"}'
+  echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | sudo tee -a /etc/apt/sources.list.d/mozilla.list > /dev/null
+  sudo apt-get update && sudo apt-get install -y firefox-beta
 fi
+
+./firefox/provisionOrRefreshCfg.sh
+
+# Extra tools, replacement for std utils. Automatically aliased if avaialble by custom bashrc.
+sudo apt-get install bat duf ripgrep exa
+## Misc
+echo "Spotify @ https://www.spotify.com/uk/download/linux/"
+echo sudo apt-get install chromium
+echo [Will require logout] sudo apt-get install gnome-shell-extension-dashtodock gnome-shell-extension-dash-to-panel
 

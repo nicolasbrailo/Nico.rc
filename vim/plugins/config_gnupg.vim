@@ -10,7 +10,7 @@ let g:GPGPreferSign=0
 let g:GPGPreferSymmetric=1
 let g:GPGExecutable='gpg --trust-model always --no-symkey-cache'
 
-# New file: gpg --trust-model always --no-symkey-cache --symmetric --armor $file_to_enctrpt
+" New file: gpg --trust-model always --no-symkey-cache --symmetric --armor $file_to_enctrpt
 
 
 

@@ -1,9 +1,8 @@
 #!/bin/bash
 
-TGT_EXT=JPG
 SUBDIR=compressed
 ORIGINALSDIR=originals
-FILES=`ls *.$TGT_EXT`
+FILES=`ls *| grep -i jpg`
 
 echo "Press enter to compress the following files:"
 echo $FILES

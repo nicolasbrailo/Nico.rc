@@ -10,6 +10,12 @@ if has('termguicolors')
   endif
 endif
 
+# This makes screen/tmux redraw properly on pgup/down
+# Found here https://www.reddit.com/r/vim/comments/57huhd/any_idea_why_terminal_vim_isnt_correctly/
+if &term =~ '256color'
+    set t_ut=
+endif
+
 set guifont=Inconsolata\ Medium\ 14
 syntax on            " Turn on syntax highlighting
 set synmaxcol=200    " Only do syntax highlighting for the first N cols

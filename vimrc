@@ -39,13 +39,11 @@ hi TabLineFill guibg=black guifg=black gui=none
 " *********** Text formatting *************
 set wildmode=list:longest,full    " Use tab-completions
 set nowrap                        " Default to non wrapping mode
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
+set tabstop=2 softtabstop=2 shiftwidth=2
 set expandtab
-set autoindent
+set number ruler
+set autoindent smartindent
 "set nosmartindent
-"set autoindent
 
 autocmd BufNewFile,BufRead *.c set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 

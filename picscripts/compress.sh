@@ -2,7 +2,7 @@
 
 SUBDIR=compressed
 ORIGINALSDIR=originals
-FILES=`ls *| grep -i jpg`
+FILES=`ls | grep -i jpg`
 
 echo "Press enter to compress the following files:"
 echo $FILES

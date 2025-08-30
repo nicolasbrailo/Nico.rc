@@ -33,6 +33,21 @@ function ,beep() {
   aplay --quiet "/home/$USER/src/Nico.rc/beam.wav"
 }
 
+function cdtofile() {
+    if [ $# -eq 0 ]; then
+        builtin cd ~;
+        return $?;
+    else
+        if [ -f "$1" ]; then
+            builtin cd "$(dirname "$1")" > /dev/null;
+            return $?;
+        else
+            builtin cd "$1" > /dev/null;
+            return $?;
+        fi;
+    fi
+}
+
 function binexists() {
   local cmd="$1"
   return $(command -v "$cmd" &>/dev/null)
@@ -51,15 +66,18 @@ function tryAlias() {
     eval "alias $default=\"$preferred\""
 
     # Try adding compgens for the alias
-    _completion_loader "$preferred_bin"
-    $(complete -p "$preferred_bin" | sed -E 's/[[:space:]]+'"$preferred_bin"'/ '"$default"'/g')
+    if binexists _completion_loader; then
+      _completion_loader "$preferred_bin"
+      $(complete -p "$preferred_bin" | sed -E 's/[[:space:]]+'"$preferred_bin"'/ '"$default"'/g')
+    fi
   fi
 }
 
 # Some fancy aliases from https://github.com/ibraheemdev/modern-unix
 tryAlias cat bat
-tryAlias du duf
+#tryAlias du duf
 tryAlias grep rg
 tryAlias ls "exa -l"
 #tryAlias vim vimx
+tryAlias cd cdtofile
 

@@ -10,8 +10,8 @@ if has('termguicolors')
   endif
 endif
 
-# This makes screen/tmux redraw properly on pgup/down
-# Found here https://www.reddit.com/r/vim/comments/57huhd/any_idea_why_terminal_vim_isnt_correctly/
+" This makes screen/tmux redraw properly on pgup/down
+" Found here https://www.reddit.com/r/vim/comments/57huhd/any_idea_why_terminal_vim_isnt_correctly/
 if &term =~ '256color'
     set t_ut=
 endif
@@ -51,7 +51,7 @@ set number ruler
 set autoindent smartindent
 "set nosmartindent
 
-autocmd BufNewFile,BufRead *.c set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
+"autocmd BufNewFile,BufRead *.c set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 
 " Show weird chars
 set listchars=tab:➩\ ,extends:›,precedes:‹,nbsp:·,trail:·

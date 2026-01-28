@@ -10,12 +10,14 @@ read -p ""
 mkdir -p $SUBDIR
 mkdir -p $ORIGINALSDIR
 
+qual=90
+
 for i in $FILES
 do
     BASE_NAME=`basename $i .$TGT_EXT`
     NEW_NAME=$SUBDIR"/"$BASE_NAME".JPG"
-    echo convert -quality 85 $i $NEW_NAME
-    convert -quality 85 $i $NEW_NAME
+    echo convert -quality $qual $i $NEW_NAME
+    convert -quality $qual $i $NEW_NAME
     mv $i $ORIGINALSDIR
 done
 

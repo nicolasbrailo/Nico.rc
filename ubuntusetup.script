@@ -23,7 +23,7 @@ fi
 # Continue with installation for normal (not minimal) systems
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get -y install vim git terminator tmux build-essential net-tools iputils-ping curl wget htop
+sudo apt-get -y install vim git terminator tmux build-essential net-tools iputils-ping curl wget htop firefox chromium-browser vlc digikam kgeotag
 sudo apt-get -y remove nano
 export EDITOR=vim
 echo "export EDITOR=vim" >> "/home/$USER/.bashrc"

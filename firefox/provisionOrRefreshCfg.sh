@@ -3,7 +3,7 @@
 set -euo pipefail
 
 echo "This script may be dangerous, it will overwrite Firefox configs"
-exit 0
+#exit 0
 
 THIS_SCRIPT=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 RED='\033[0;31m'

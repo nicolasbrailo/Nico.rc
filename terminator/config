@@ -1,5 +1,4 @@
 [global_config]
-  suppress_multiple_term_dialog = True
 [keybindings]
   new_tab = <Primary>t
   cycle_next = ""

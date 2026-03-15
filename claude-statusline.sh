@@ -28,4 +28,4 @@ fi
 prefix=""
 [ -n "$name" ] && prefix="$name | "
 
-printf "%s%s | %s | \$%s | ctx: %s" "$prefix" "$host" "$cwd" "$cost" "$ctx_display"
+printf "%s%s | %s | \$%s | free ctx: %s" "$prefix" "$host" "$cwd" "$cost" "$ctx_display"

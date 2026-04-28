@@ -1,3 +1,8 @@
+# OSX ships with ancient bash. Install new one and run it.
+if [ "${BASH_VERSINFO[0]}" -lt 5 ] && [ -x "$HOME/src/brew/bin/bash" ]; then
+    exec "$HOME/src/brew/bin/bash" --login
+fi
+
 # Access to my fastgrep script from everywhere without adding a new $PATH entry
 alias fastgrep="/home/$USER/src/Nico.rc/fastgrep.sh"
 alias gf="/home/$USER/src/Nico.rc/fastgrep.sh"
@@ -6,6 +11,14 @@ alias gf="/home/$USER/src/Nico.rc/fastgrep.sh"
 if [ -d "$HOME/src/bin" ]; then
     PATH="$HOME/src/bin:$PATH"
 fi
+
+function kittytitle() {
+  if [ -n "$TMUX" ]; then
+    printf '\ePtmux;\e\e]2;%s\a\e\\' "$1"
+  else
+    printf '\e]2;%s\a' "$1"
+  fi
+}
 
 # GPG shouldn't use GUI
 GPG_TTY=`tty`

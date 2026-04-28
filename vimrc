@@ -147,20 +147,8 @@ source ~/.vim/plugins/rainbow_parenthesis.vim
 source ~/.vim/plugins/bettertabnew.vim
 source ~/.vim/plugins/tabmover.vim
 
-noremap <C-S-RIGHT> :call MoveTab(2)<CR>
-noremap <C-S-LEFT> :call MoveTab(-1)<CR>
-" tmux/iterm send escape sequences instead of C-S-left/right
-noremap [1;6C :call MoveTab(2)<CR>
-noremap [1;6D :call MoveTab(-1)<CR>
-
-" https://github.com/Valloric/YouCompleteMe#c-family-semantic-completion
-let g:ycm_global_ycm_extra_conf = '~/.vim/ycm_extraconf.py'
-let g:ycm_disable_for_files_larger_than_kb = 50
-" Cheatsheet:
-"   YcmDiags -> See all errors/warnings in a file
-"   YcmDebugInfo -> See compile command for file
-"   YcmCompleter GoTo -> Jump to definition/impl
-
+noremap <C-S-PageDown> :call MoveTab(2)<CR>
+noremap <C-S-PageUp> :call MoveTab(-1)<CR>
 
 " *********** Plugins *************
 execute pathogen#infect()
@@ -230,4 +218,13 @@ let localCfg = expand("~/.vimlocal.vim")
 if filereadable(localCfg)
   exec "source " . localCfg
 endif
+
+function! Osc52Yank()
+    let buffer = system('base64 -w0', @0)
+    let buffer = substitute(buffer, "\n$", "", "")
+    let buffer = "\e]52;c;" . buffer . "\x07"
+    call writefile([buffer], '/dev/tty', 'b')
+endfunction
+vnoremap "+y y:call Osc52Yank()<CR>
+nnoremap "+y yy:call Osc52Yank()<CR>
 

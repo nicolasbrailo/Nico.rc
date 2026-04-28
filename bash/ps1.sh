@@ -8,7 +8,7 @@ export PS1='\A \h:\w \$ '
 if [ -z "$THIS_HOST_COLOR" ]; then export THIS_HOST_COLOR=103; fi
 
 export COLOR_RESET='\[\e[0m\]'
-export COLOR_SET='\[\e['$THIS_HOST_COLOR'm\]'
+export COLOR_SET='\[\e[38;5;'$THIS_HOST_COLOR'm\]'
 export PS1_NL_SEP=''
 export LONG_PS1='\A '$COLOR_SET'\h'$COLOR_RESET':\w$PS1_NL_SEP\$ ';
 export SHORT_PS1='\A \w$PS1_NL_SEP\$ ';

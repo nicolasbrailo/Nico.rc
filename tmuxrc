@@ -31,33 +31,18 @@ set -g status-right "#[bg=colour233,fg=colour$THIS_HOST_COLOR,dim] $HOSTNAME "
 # Auto-set title (overrideable with window-rename)
 set-option -g automatic-rename on
 
+# Allow escape sequences to pass through tmux to the outer terminal (kitty).
+# Needed for kittytitle alias to set kitty's tab name from inside tmux.
+set -g allow-passthrough on
+# Prevent tmux from overwriting kitty's tab title on window switches.
+set -g set-titles off
+
 set -g visual-bell off
 set -g visual-activity off
 set -g visual-silence off
 # Highlight a window with activity
 setw -g monitor-activity on
 
-
-# # Destroy all keybindings
-# #unbind-key -a
-#
-# # Set prefix key, to ensure some kind of menu is always available
-# set-option -g prefix M-b
-# bind-key M-b send-prefix
-#
-# # pane select and resize
-# bind -n M-Up    select-pane -U
-# bind -n M-Down  select-pane -D
-# bind -n M-Left  select-pane -L
-# bind -n M-Right select-pane -R
-# bind -n S-M-Up     resize-pane -U
-# bind -n S-M-Down   resize-pane -D
-# bind -n S-M-Left   resize-pane -L
-# bind -n S-M-Right  resize-pane -R
-#
-# bind -n M-\\ split -h
-# bind -n M-\- split -v
-#
 # window management
 bind -n M-t new-window
 bind -n M-NPage next-window
@@ -71,15 +56,17 @@ bind -n M-r command-prompt "rename-window '%% '"
 bind -n M-k send-keys -R \; clear-history
 
 # Enable mouse; pane-scrolling, window resize, etc
+# Enable mouse; pane-scrolling, window resize, etc.
+# This grabs all mouse events, so Shift+click is needed to open links in kitty.
 set -g mouse on
 
 # Better copy and scrollback mode
-unbind -T copy-mode-vi MouseDragEnd1Pane
-bind-key -T copy-mode-vi y send-keys -X copy-selection
 set-window-option -g mode-keys vi
-bind-key -T copy-mode-vi v send -X begin-selection
-bind-key -T copy-mode-vi V send -X select-line
-bind-key -T copy-mode-vi y send -X copy-pipe-and-cancel 'xclip -in -selection clipboard'
+# Use OSC 52 to push yanked text to the system clipboard via the terminal.
+# Works across SSH without needing pbcopy/xclip/wl-copy.
+set -s set-clipboard on
+# Copy on mouse release but keep the selection highlighted (don't exit copy mode).
+bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-no-clear
 
 # Set new panes to open in current directory
 bind c new-window -c "#{pane_current_path}"
@@ -88,3 +75,9 @@ bind % split-window -h -c "#{pane_current_path}"
 
 # Copy buffer history to a file
 bind-key a capture-pane -S - \; save-buffer ~/tmuxbuf.txt \; display "Buffer history saved to ~/tmuxbuf.txt"
+
+# C-b C-s -> Save, C-b C-r -> Restore
+run-shell "~/src/Nico.rc/tmux/tmux-resurrect/resurrect.tmux"
+run-shell "~/src/Nico.rc/tmux/tmux-continuum/continuum.tmux"
+set -g @continuum-boot 'on'
+

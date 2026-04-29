@@ -19,8 +19,11 @@ set -ga terminal-overrides ",st-256color:Tc"
 set  -g status-position top
 set  -g status-style                 'fg=colour16 bg=colour109 bold'
 setw -g window-status-current-style  'fg=colour16 bg=colour103 bold'
-set  -g pane-border-style            'fg=colour109 bg=colour16'
-set  -g pane-active-border-style     'fg=colour103 bg=colour16'
+set  -g pane-border-style            'fg=colour236 bg=colour16'
+set  -g pane-active-border-style     'fg=colour147 bg=colour16'
+set  -g pane-border-indicators       arrows
+set  -g window-style                 'bg=colour233'
+set  -g window-active-style          'bg=colour16'
 set  -g message-style                'fg=colour223 bg=colour90 bold'
 # color for activity monitor
 set-window-option -ga window-status-activity-style fg=colour110,bg=colour16

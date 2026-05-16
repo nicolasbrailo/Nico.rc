@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+# Diagnose what's blocking suspend on this machine.
+# Lists systemd block-mode inhibitors and resolves GNOME session-manager
+# inhibitors back to the application that registered them.
+
+set -u
+
+bold() { printf '\033[1m%s\033[0m\n' "$*"; }
+dim()  { printf '\033[2m%s\033[0m\n' "$*"; }
+
+bold "=== systemd-inhibit (block-mode, sleep-related) ==="
+# Header + any block-mode rows that affect sleep/idle/shutdown.
+inhibitors=$(systemd-inhibit --list --no-pager 2>/dev/null)
+echo "$inhibitors" | head -1
+blockers=$(echo "$inhibitors" | awk 'NR>1 && /block/ && ($6 ~ /sleep|idle|shutdown|handle-suspend|handle-hibernate/)')
+if [[ -z "$blockers" ]]; then
+    echo "(none)"
+else
+    echo "$blockers"
+fi
+echo
+
+# gsd-media-keys' handle-*-key block is normal — it just means GNOME wants
+# to receive the power/suspend key events instead of logind. Flag it as benign.
+if echo "$blockers" | grep -q 'gsd-media-keys.*handle-'; then
+    dim "Note: gsd-media-keys 'handle-*-key' block is normal (GNOME intercepts power keys)."
+    echo
+fi
+
+bold "=== GNOME session-manager inhibitors ==="
+if ! command -v gdbus >/dev/null; then
+    echo "gdbus not installed — skipping GNOME lookup."
+    exit 0
+fi
+
+# Pull the list of inhibitor object paths from GNOME's session manager.
+raw=$(gdbus call --session \
+        --dest org.gnome.SessionManager \
+        --object-path /org/gnome/SessionManager \
+        --method org.gnome.SessionManager.GetInhibitors 2>/dev/null) || {
+    echo "Could not reach org.gnome.SessionManager (not running GNOME?)."
+    exit 0
+}
+
+paths=$(echo "$raw" | grep -oE "/org/gnome/SessionManager/Inhibitor[0-9]+")
+if [[ -z "$paths" ]]; then
+    echo "(no GNOME inhibitors registered)"
+    exit 0
+fi
+
+# Flag bits used by org.gnome.SessionManager.Inhibit:
+#   1 = logout, 2 = switch-user, 4 = suspend, 8 = idle, 16 = auto-mount
+decode_flags() {
+    local f=$1 out=()
+    (( f & 1  )) && out+=("logout")
+    (( f & 2  )) && out+=("switch-user")
+    (( f & 4  )) && out+=("SUSPEND")
+    (( f & 8  )) && out+=("idle")
+    (( f & 16 )) && out+=("auto-mount")
+    (IFS=,; echo "${out[*]:-none}")
+}
+
+get() {
+    # Strip the gdbus tuple wrapper: ('foo',) -> foo
+    gdbus call --session --dest org.gnome.SessionManager \
+        --object-path "$1" \
+        --method "org.gnome.SessionManager.Inhibitor.$2" 2>/dev/null \
+        | sed -E "s/^\\(['\"]?//; s/['\"]?,?\\)$//; s/^uint32 //"
+}
+
+found_suspend_blocker=0
+for p in $paths; do
+    appid=$(get "$p" GetAppId)
+    reason=$(get "$p" GetReason)
+    flags=$(get "$p" GetFlags)
+    decoded=$(decode_flags "$flags")
+    echo "  $p"
+    echo "    AppId : $appid"
+    echo "    Reason: $reason"
+    echo "    Flags : $flags ($decoded)"
+    echo
+    if (( flags & 4 )); then
+        found_suspend_blocker=1
+        suspect_app=$appid
+        suspect_reason=$reason
+    fi
+done
+
+if (( found_suspend_blocker )); then
+    bold "=== Verdict ==="
+    echo "Suspend is being blocked by: $suspect_app"
+    echo "Reason given: $suspect_reason"
+    echo
+    echo "Quit the app fully (check tray icons), then re-run this script to confirm."
+    base=$(basename "${suspect_app%% *}")
+    if [[ -n "$base" && "$base" != "/" ]]; then
+        echo "Quick kill:  pkill -f '$base'"
+    fi
+else
+    bold "=== Verdict ==="
+    echo "No GNOME inhibitor is requesting INHIBIT_SUSPEND."
+    echo "If suspend still fails, check:"
+    echo "  journalctl -b -k | grep -iE 'suspend|PM:|resume|s2idle'"
+    echo "  cat /sys/power/mem_sleep"
+    echo "  cat /proc/acpi/wakeup"
+fi

@@ -68,6 +68,11 @@ set-window-option -g mode-keys vi
 # Use OSC 52 to push yanked text to the system clipboard via the terminal.
 # Works across SSH without needing pbcopy/xclip/wl-copy.
 set -s set-clipboard on
+# Linux ncurses doesn't ship the Ms (set-clipboard) capability for xterm-kitty
+# or xterm-256color, so `set-clipboard on` is a no-op without these overrides.
+# macOS terminfo has Ms already; re-declaring it here is harmless there.
+set -ga terminal-overrides ",xterm-kitty:Ms=\\E]52;%p1%s;%p2%s\\7"
+set -ga terminal-overrides ",xterm-256color:Ms=\\E]52;%p1%s;%p2%s\\7"
 # Copy on mouse release but keep the selection highlighted (don't exit copy mode).
 bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-no-clear
 

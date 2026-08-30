@@ -8,7 +8,7 @@ read -p ""
 
 for i in $FILES
 do
-    echo exiv2 -r '%Y%m%d.%H%M%S' rename $i
-    exiv2 -r '%Y%m%d.%H%M%S' rename $i
+    echo exiv2 -F -r '%Y%m%d.%H%M%S' rename $i
+    exiv2 -F -r '%Y%m%d.%H%M%S' rename $i
 done
 

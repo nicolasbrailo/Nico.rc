@@ -94,3 +94,48 @@ tryAlias ls "exa -l"
 #tryAlias vim vimx
 tryAlias cd cdtofile
 
+# fzf: Ctrl-R fuzzy history, Ctrl-T file picker, Alt-C fuzzy cd
+if command -v fzf >/dev/null; then
+  # Default walkers include 'hidden'; drop it to skip dotfiles/dotdirs
+  _fzf_skip="--walker-skip node_modules,__pycache__,build,dist,target,venv"
+  export FZF_CTRL_T_OPTS="--walker file,dir,follow $_fzf_skip"
+  export FZF_ALT_C_OPTS="--walker dir,follow $_fzf_skip"
+  unset _fzf_skip
+  eval "$(fzf --bash)"
+
+  # When in ~, only let Ctrl-T walk these dirs instead of all of $HOME
+  FZF_HOME_ROOTS=(src Downloads Desktop Screenshots)
+  eval "$(declare -f __fzf_select__ | sed '1s/__fzf_select__/__fzf_select_all__/')"
+  __fzf_select__() {
+    local FZF_CTRL_T_OPTS="${FZF_CTRL_T_OPTS-}" d roots=""
+    if [[ $PWD == "$HOME" ]]; then
+      for d in "${FZF_HOME_ROOTS[@]}"; do
+        [[ -d $d ]] && roots+=" $d"
+      done
+      # One flag with a list; repeating --walker-root keeps only the last
+      [[ -n $roots ]] && FZF_CTRL_T_OPTS+=" --walker-root$roots"
+    fi
+    __fzf_select_all__ "$@"
+  }
+
+  # Ctrl-T: Enter inserts the pick and runs the line, Tab only inserts it.
+  # bind -x can't call accept-line, so Ctrl-T is a macro: run the widget,
+  # then press \C-x\C-b, which the widget rebinds to accept-line or a no-op.
+  __fzf_file_widget_run__() {
+    local out key
+    out="$(FZF_CTRL_T_OPTS="${FZF_CTRL_T_OPTS-} --expect=tab" __fzf_select__)"
+    # First word is the --expect key: "tab", or '' for Enter
+    key=${out%% *}
+    out=${out#* }
+    READLINE_LINE="${READLINE_LINE:0:READLINE_POINT}$out${READLINE_LINE:READLINE_POINT}"
+    READLINE_POINT=$((READLINE_POINT + ${#out}))
+    if [[ -n $out && $key != tab ]]; then
+      bind '"\C-x\C-b": accept-line'
+    else
+      bind '"\C-x\C-b": redraw-current-line'
+    fi
+  }
+  bind -m emacs-standard -x '"\C-x\C-a": __fzf_file_widget_run__'
+  bind -m emacs-standard '"\C-t": "\C-x\C-a\C-x\C-b"'
+fi
+

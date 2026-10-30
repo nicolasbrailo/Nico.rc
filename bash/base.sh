@@ -129,7 +129,10 @@ if command -v fzf >/dev/null; then
     out=${out#* }
     READLINE_LINE="${READLINE_LINE:0:READLINE_POINT}$out${READLINE_LINE:READLINE_POINT}"
     READLINE_POINT=$((READLINE_POINT + ${#out}))
-    if [[ -n $out && $key != tab ]]; then
+    __fzf_maybe_accept__ "$out" "$key"
+  }
+  __fzf_maybe_accept__() {
+    if [[ -n $1 && $2 != tab ]]; then
       bind '"\C-x\C-b": accept-line'
     else
       bind '"\C-x\C-b": redraw-current-line'
@@ -137,5 +140,21 @@ if command -v fzf >/dev/null; then
   }
   bind -m emacs-standard -x '"\C-x\C-a": __fzf_file_widget_run__'
   bind -m emacs-standard '"\C-t": "\C-x\C-a\C-x\C-b"'
+
+  # Ctrl-R: same Enter/Tab split. With --expect, fzf's first output line
+  # is the key, so __fzf_history__ leaves "key\ncommand" in READLINE_LINE.
+  __fzf_history_run__() {
+    local FZF_CTRL_R_OPTS="${FZF_CTRL_R_OPTS-} --expect=tab" key
+    if ! __fzf_history__; then
+      __fzf_maybe_accept__ "" ""
+      return
+    fi
+    key=${READLINE_LINE%%$'\n'*}
+    READLINE_LINE=${READLINE_LINE#*$'\n'}
+    READLINE_POINT=${#READLINE_LINE}
+    __fzf_maybe_accept__ "$READLINE_LINE" "$key"
+  }
+  bind -m emacs-standard -x '"\C-x\C-c": __fzf_history_run__'
+  bind -m emacs-standard '"\C-r": "\C-x\C-c\C-x\C-b"'
 fi
 
